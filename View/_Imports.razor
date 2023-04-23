@@ -11,7 +11,6 @@
 @using Microsoft.AspNetCore.Components
 
 @using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
-@inject ProtectedLocalStorage ProtectedLocalStorage
 
 @using MudBlazor
 
@@ -21,6 +20,7 @@
 @using Domain.Repositories
 @using Domain.Repositories.Implementations
 @using Domain.Repositories.Interfaces
+@using Microsoft.JSInterop
 
 @using Model
 @using Model.Configuration
@@ -36,6 +36,9 @@
 @using View.Shared.Layout
 @using View.Shared.DataHandler
 
+@inject IJSRuntime JSRuntime
+@inject BrowserService BrowserService
+
 
 @inject UserService UserService
 @inject NavigationManager NavigationManager
@@ -49,7 +52,7 @@
 @inject ISnackbar Snackbar
 @inherits CancellationComponent
 @inject IThemeHandler ThemeHandler
-@inject ProtectedLocalStorage LocalStorage
+@inject ProtectedLocalStorage ProtectedLocalStorage
 
 @inject DateManager DateManager
 @inject NavigationProvider NavigationProvider

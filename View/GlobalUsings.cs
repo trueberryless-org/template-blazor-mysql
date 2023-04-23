@@ -24,3 +24,6 @@ global using Model.Entities.Log;
 
 global using View;
 global using View.Services;
+
+
+global using Microsoft.JSInterop;

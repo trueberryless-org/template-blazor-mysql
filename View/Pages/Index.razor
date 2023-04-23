@@ -2,6 +2,11 @@
 
 @code {
 
+    protected override async Task OnInitializedAsync()
+    {
+        BrowserService.Init(JSRuntime);
+    }
+
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (!firstRender) return;

@@ -103,7 +103,7 @@
 
     private async void HandleDrawerOpenChanged(bool value) {
         ThemeHandler.UpdateThemeMenu(value);
-        await LocalStorage.SetAsync("Theme", new Theme {
+        await ProtectedLocalStorage.SetAsync("Theme", new Theme {
             DarkMode = ThemeHandler.DarkMode,
             Primary = ThemeHandler.Theme.Palette.Primary.ToString(),
             Secondary = ThemeHandler.Theme.Palette.Secondary.ToString(),

@@ -8,9 +8,7 @@
                 <Authorized>
                     <MudMenuItem href="@NavigationProvider["Profile"].Link">Profile</MudMenuItem>
                     <MudMenuItem href="@NavigationProvider["Settings"].Link">Settings</MudMenuItem>
-                    <MudMenuItem Icon="@Icons.Material.Filled.Logout" OnClick="LogoutAsync" IconSize="Size.Small">
-                        Log out
-                    </MudMenuItem>
+                    <MudMenuItem OnClick="LogoutAsync" IconSize="Size.Small">Log out</MudMenuItem>
                 </Authorized>
                 <NotAuthorized>
                     <MudMenuItem href="@NavigationProvider["Login"].Link" IconSize="Size.Small" IconColor="Color.Tertiary" Icon="@Icons.Material.Filled.Login">

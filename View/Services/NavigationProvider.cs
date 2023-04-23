@@ -28,7 +28,7 @@ public class NavigationProvider
             },
             {
                 "Register",
-                new Page() { Name = "Register", Link = "/register", Type = PageType.AUTHENTICATION, Icon = Icons.Material.Filled.Logout }
+                new Page() { Name = "Register", Link = "/register", Type = PageType.AUTHENTICATION, Icon = Icons.Material.Filled.PersonAdd }
             },
 
             // Add pages here (everything else is automatic) #https://mudblazor.com/features/icons#icons
@@ -47,14 +47,16 @@ public class NavigationProvider
 
     public Page this[string name] => _pages[name];
 
-    public List<Page> GetPages(params PageType[]? types)
+    public List<Page> GetPages(params PageType[] types)
     {
-        if (types == null)
-            return _pages.Select(p => p.Value).ToList();
+        if (types.Length > 0)
+            return _pages
+                .Where(p => types.Contains(p.Value.Type))
+                .Select(p => p.Value)
+                .ToList();
 
         else
             return _pages
-                .Where(p => types.Contains(p.Value.Type))
                 .Select(p => p.Value)
                 .ToList();
     }

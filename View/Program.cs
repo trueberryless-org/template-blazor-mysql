@@ -54,6 +54,7 @@ builder.Services.AddScoped<CircuitHandler, CircuitTracker>();
 
 builder.Services.AddScoped<NavigationProvider>();
 builder.Services.AddScoped<DateManager>();
+builder.Services.AddScoped<BrowserService>();
 
 builder.Services.AddLogging(); // the default Logger
 

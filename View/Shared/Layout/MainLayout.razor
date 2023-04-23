@@ -1,28 +1,40 @@
 ﻿@inherits LayoutComponentBase
-@inject NavigationManager NavigationManager
-@inject UserService UserService
-@inject ProtectedLocalStorage ProtectedLocalStorage;
 
 <MudThemeProvider IsDarkMode="@IsDarkMode" @ref="@_mudThemeProvider"/>
 <MudDialogProvider/>
 <MudSnackbarProvider/>
 
 <MudLayout>
-    <MudMainContent Style="padding: 0; overflow-x: hidden">
+    @if (BrowserService.IsPortrait)
+    {
+        <MudMainContent Style="padding: 0; overflow-x: hidden">
+            <CascadingValue Value="@this">
+                @Body
+            </CascadingValue>
+        </MudMainContent>
         <CascadingValue Value="@this">
-            @Body
+            <NavMenuMobile/>
         </CascadingValue>
-        <div style="height: 7rem;"></div>
-    </MudMainContent>
-    <CascadingValue Value="@this">
-        <NavMenu/>
-    </CascadingValue>
-    <ProfileMenu/>
+        <ProfileMenu/>
+    }
+    else
+    {
+        <CascadingValue Value="@this">
+            <NavMenu/>
+        </CascadingValue>
+        
+        <MudMainContent Style="padding: 0; overflow-x: hidden">
+            <CascadingValue Value="@this">
+                @Body
+            </CascadingValue>
+        </MudMainContent>
+    }
     <div style="height: 10vh"></div>
 </MudLayout>
 
 @code {
     public bool IsDarkMode;
+
     private MudThemeProvider? _mudThemeProvider;
 
     public async void ToggleDarkMode(bool? changedDarkMode)
@@ -39,10 +51,22 @@
         await ProtectedLocalStorage.SetAsync("DarkMode", changedDarkMode!);
     }
 
+    protected override async void OnInitialized()
+    {
+        // subscribe to browser width change
+        BrowserService.Resize += UpdateOrientation;
+    }
+
+    private void UpdateOrientation(object? sender, bool b)
+    {
+        StateHasChanged();
+    }
+
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (!firstRender)
             return;
+
 
     // darkMode
         try
