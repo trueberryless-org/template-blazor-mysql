@@ -32,6 +32,8 @@
       <_ContentIncludedByDefault Remove="Pages\ManageWorkouts\NewWorkout.razor" />
       <_ContentIncludedByDefault Remove="Pages\ManageWorkouts\ViewWorkoutDetails.razor" />
       <_ContentIncludedByDefault Remove="Pages\ManageWorkouts\ViewWorkouts.razor" />
+      <_ContentIncludedByDefault Remove="Shared\Auth\AccountInputComponent.razor" />
+      <_ContentIncludedByDefault Remove="Shared\Auth\AccountMenu.razor" />
     </ItemGroup>
 
 </Project>

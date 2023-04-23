@@ -41,7 +41,7 @@
         <MudCardActions>
             <MudButton ButtonType="ButtonType.Button" Variant="Variant.Filled" Color="Color.Primary" OnClick="async () => await HandleLoginAsync()">Login</MudButton>
             <MudSpacer/>
-            <a href="/register">
+            <a href="@NavigationProvider["Register"].Link">
                 <MudText Typo="Typo.subtitle1">
                     Don't have an account?
                 </MudText>
