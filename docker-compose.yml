@@ -1,0 +1,22 @@
+services:
+  mysql:
+    image: mysql:8.0.27
+    networks:
+      - network_mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: 'toor'
+  
+  trainit:
+    image: trueberryless/trainit
+    ports:
+      - "80:80"
+      - "443:443"
+    networks:
+      - network_mysql
+    depends_on:
+      - mysql
+
+networks:
+  network_mysql: 
+  
+  

@@ -1,0 +1,37 @@
+﻿<div style="position: absolute; top: 1.4rem; right: 1rem; z-index: 100">
+    <MudMenu AnchorOrigin="Origin.BottomRight" TransformOrigin="Origin.TopRight">
+        <ActivatorContent>
+            <MudFab Color="Color.Secondary" StartIcon="@Icons.Material.Filled.Person"/>
+        </ActivatorContent>
+        <ChildContent>
+            <AuthorizeView>
+                <Authorized>
+                    <MudMenuItem href="/profile">Profile</MudMenuItem>
+                    <MudMenuItem href="/settings">Settings</MudMenuItem>
+                    <MudMenuItem OnClick="LogoutAsync" IconSize="Size.Small" IconColor="Color.Tertiary" Icon="@Icons.Material.Filled.Logout">
+                        <MudButton OnClick="LogoutAsync" Variant="Variant.Filled" Color="Color.Primary">Log Out</MudButton>
+                    </MudMenuItem>
+                </Authorized>
+                    <NotAuthorized>
+                    <MudMenuItem href="/login" IconSize="Size.Small" IconColor="Color.Tertiary" Icon="@Icons.Material.Filled.Login">
+                        <MudButton href="/login" Variant="Variant.Filled" Color="Color.Primary">Log In</MudButton>
+                    </MudMenuItem>
+                    <MudMenuItem href="/register" IconSize="Size.Small" IconColor="Color.Tertiary" Icon="@Icons.Material.Filled.EmojiPeople">
+                        <MudButton href="/register" Variant="Variant.Filled" Color="Color.Secondary">Sign Up</MudButton>
+                    </MudMenuItem>
+                </NotAuthorized>
+            </AuthorizeView>
+        </ChildContent>
+    </MudMenu>
+</div>
+
+
+@code {
+
+    public async Task LogoutAsync()
+    {
+        await UserService.LogoutAsync();
+        NavigationManager.NavigateTo("/login");
+    }
+
+}
