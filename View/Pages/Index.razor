@@ -2,10 +2,14 @@
 
 @code {
 
-    protected override void OnAfterRender(bool firstRender)
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (!firstRender) return;
-        NavigationManager.NavigateTo("/profile");
+        
+        if (await UserService.IsAuthenticated())
+            NavigationManager.NavigateTo(NavigationProvider["Home"].Link);
+        else
+            NavigationManager.NavigateTo(NavigationProvider["Login"].Link);
     }
 
 }

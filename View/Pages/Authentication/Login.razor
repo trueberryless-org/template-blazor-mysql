@@ -3,7 +3,7 @@
 
 <PageTitle>Login</PageTitle>
 
-<MudContainer Class="mt-8 my-login-container" >
+<MudContainer Class="mt-8">
     <MudStack Spacing="4">
         <h1 class="ms-4 mb-12">Log In</h1>
         
@@ -18,12 +18,14 @@
                 
                 <MudTextField
                     T="string" Immediate="true" InputType="InputType.Text" InputMode="InputMode.text"
+                    Variant="Variant.Outlined"
                     Label="Email"
                     @bind-Value="Model.Email"
                     For="() => Model.Email"/>
                 
                 <MudTextField
                     T="string" Immediate="true" InputMode="InputMode.text"
+                    Variant="Variant.Outlined"
                     Label="Password" Class="mt-3"
                     InputType="_passwordInputType" Adornment="Adornment.End"
                     AdornmentIcon="@_passwordInputIcon" OnAdornmentClick="ShowPwd"
@@ -47,32 +49,6 @@
         </MudCardActions>
     </MudStack>
 </MudContainer>
-
-<style>
-    body {
-        background: url('https://images.unsplash.com/photo-1527769929977-c341ee9f2033?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80');
-        background-size: cover;
-        background-repeat: no-repeat;
-        min-height: 100vh;
-        overflow: hidden;
-    }
-    
-    .my-login-container {
-        position: absolute;
-        top: 20rem;   
-    }
-    
-    .my-login-container::after {
-        content: '';
-        position: absolute;
-        inset: -20rem;
-        top: -10rem;
-        background: -moz-linear-gradient(180deg, rgba(44,62,80,0) 0%, rgba(44,62,80,0.5) 33%, rgba(44,62,80,0.5) 66%, rgba(44,62,80,0) 100%);
-        background: -webkit-linear-gradient(180deg, rgba(44,62,80,0) 0%, rgba(44,62,80,0.5) 33%, rgba(44,62,80,0.5) 66%, rgba(44,62,80,0) 100%);
-        background: linear-gradient(180deg, rgba(44,62,80,0) 0%, rgba(44,62,80,0.5) 33%, rgba(44,62,80,0.5) 66%, rgba(44,62,80,0) 100%);
-        z-index: -1;
-    }
-</style>
 
 @code {
     bool _isLoggingIn;
@@ -115,7 +91,7 @@
             if (!await _from.IsFormValidAsync()) return;
             _isLoggingIn = true;
             await UserService.LoginAsync(Model);
-            NavigationManager.NavigateTo("/");
+            NavigationManager.NavigateTo(NavigationProvider["Root"].Link);
         }
         catch (LoginException)
         {

@@ -40,6 +40,17 @@
                         </p>
                     }
                 </MudPaper>
+                <MudButton StartIcon="@Icons.Material.Filled.Logout" Disabled="@_processing" OnClick="LogoutAsync" Variant="Variant.Filled" Color="Color.Primary">
+                    @if (_processing)
+                    {
+                        <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true"/>
+                        <MudText Class="ms-2">Processing</MudText>
+                    }
+                    else
+                    {
+                        <MudText>Log Out</MudText>
+                    }
+                </MudButton>
             </MudStack>
         </MudContainer>
     </Authorized>
@@ -50,4 +61,13 @@
     [CascadingParameter]
     public MainLayout? MainLayout { get; set; }
 
+    
+    private bool _processing = false;
+    
+    public async Task LogoutAsync()
+    {
+        _processing = true;
+        await UserService.LogoutAsync();
+        NavigationManager.NavigateTo(NavigationProvider["Login"].Link);
+    }
 }

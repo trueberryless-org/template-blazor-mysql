@@ -11,6 +11,10 @@ public class NavigationProvider
         _pages = new Dictionary<string, Page>()
         {
             { 
+                "Root", 
+                new Page() { Name = "Root", Link = "/", Type = PageType.SERVICE } 
+            },
+            { 
                 "Profile", 
                 new Page() { Name = "Profile", Link = "/profile", Type = PageType.USER, Icon = Icons.Material.Filled.Person } 
             },
@@ -38,109 +42,10 @@ public class NavigationProvider
                     Icon = Icons.Material.Filled.Home
                 }
             },
-            {
-                "Activities", 
-                new Page()
-                {
-                    Name = "Activities", 
-                    Link = "/activities", 
-                    Type = PageType.CONTENT, 
-                    Icon = Icons.Material.Filled.Calculate
-                }
-            },
-            {
-                "Calendar", 
-                new Page()
-                {
-                    Name = "Calendar", 
-                    Link = "/Calendar", 
-                    Type = PageType.CONTENT, 
-                    Icon = Icons.Material.Filled.CalendarMonth
-                }
-            },
-            {
-                "Work", 
-                new Page()
-                {
-                    Name = "Work", 
-                    Link = "/Work", 
-                    Type = PageType.CONTENT, 
-                    Icon = Icons.Material.Filled.Work
-                }
-            },
-            {
-                "Handshake", 
-                new Page()
-                {
-                    Name = "Handshake", 
-                    Link = "/Handshake", 
-                    Type = PageType.CONTENT, 
-                    Icon = Icons.Material.Filled.Handshake
-                }
-            },
-            {
-                "Factory", 
-                new Page()
-                {
-                    Name = "Factory", 
-                    Link = "/Factory", 
-                    Type = PageType.CONTENT, 
-                    Icon = Icons.Material.Filled.Factory
-                }
-            },
-            {
-                "Padding", 
-                new Page()
-                {
-                    Name = "Padding", 
-                    Link = "/Padding", 
-                    Type = PageType.CONTENT, 
-                    Icon = Icons.Material.Filled.Padding
-                }
-            },
-            {
-                "Games", 
-                new Page()
-                {
-                    Name = "Games", 
-                    Link = "/Games", 
-                    Type = PageType.CONTENT, 
-                    Icon = Icons.Material.Filled.Games
-                }
-            },
-            {
-                "Receipt", 
-                new Page()
-                {
-                    Name = "Receipt", 
-                    Link = "/Receipt", 
-                    Type = PageType.CONTENT, 
-                    Icon = Icons.Material.Filled.Receipt
-                }
-            },
-            {
-                "Feedback", 
-                new Page()
-                {
-                    Name = "Feedback", 
-                    Link = "/Feedback", 
-                    Type = PageType.CONTENT, 
-                    Icon = Icons.Material.Filled.Feedback
-                }
-            },
-            {
-                "ZoomIn", 
-                new Page()
-                {
-                    Name = "ZoomIn", 
-                    Link = "/ZoomIn", 
-                    Type = PageType.CONTENT
-                }
-            },
         };
     }
 
-    public string this[string name] => _pages[name].Link;
+    public Page this[string name] => _pages[name];
 
     public List<Page> GetPages(params PageType[]? types)
     {
@@ -179,5 +84,6 @@ public enum PageType
 {
     AUTHENTICATION,
     CONTENT,
+    SERVICE,
     USER,
 }

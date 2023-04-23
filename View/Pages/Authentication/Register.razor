@@ -20,6 +20,7 @@
                     T="string"
                     InputMode="InputMode.text" InputType="InputType.Text" Immediate="true"
                     Counter="32" MaxLength="32"
+                    Variant="Variant.Outlined"
                     Label="Username"
                     @bind-Value="RegUser.Username"
                     For="() => RegUser.Username"/>
@@ -28,6 +29,7 @@
                     T="string"
                     InputMode="InputMode.text" InputType="InputType.Text" Immediate="true"
                     Counter="50" MaxLength="50"
+                    Variant="Variant.Outlined"
                     Label="Email"
                     @bind-Value="RegUser.Email"
                     For="() => RegUser.Email"/>
@@ -35,6 +37,7 @@
                 <MudTextField
                     T="string"
                     InputMode="InputMode.text" InputType="_passwordInputType" Immediate="true"
+                    Variant="Variant.Outlined"
                     Label="Password" HelperText="Choose a strong password | Min 8 chars"
                     Adornment="Adornment.End"
                     AdornmentIcon="@_passwordInputIcon" OnAdornmentClick="ShowPwd"
@@ -60,32 +63,6 @@
         </MudCardActions>
     </MudStack>
 </MudContainer>
-
-<style>
-    body {
-        background: url('https://images.unsplash.com/photo-1527769929977-c341ee9f2033?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80');
-        background-size: cover;
-        background-repeat: no-repeat;
-        min-height: 100vh;
-        overflow: hidden;
-    }
-    
-    .my-login-container {
-        position: absolute;
-        top: 20rem;   
-    }
-    
-    .my-login-container::after {
-        content: '';
-        position: absolute;
-        inset: -20rem;
-        top: -10rem;
-        background: -moz-linear-gradient(180deg, rgba(44,62,80,0) 0%, rgba(44,62,80,0.5) 33%, rgba(44,62,80,0.5) 66%, rgba(44,62,80,0) 100%);
-        background: -webkit-linear-gradient(180deg, rgba(44,62,80,0) 0%, rgba(44,62,80,0.5) 33%, rgba(44,62,80,0.5) 66%, rgba(44,62,80,0) 100%);
-        background: linear-gradient(180deg, rgba(44,62,80,0) 0%, rgba(44,62,80,0.5) 33%, rgba(44,62,80,0.5) 66%, rgba(44,62,80,0) 100%);
-        z-index: -1;
-    }
-</style>
 
 @code {
     bool _isRegistering;
@@ -128,7 +105,7 @@
             _isRegistering = true;
             await UserService.RegisterAsync(RegUser);
             await UserService.LoginAsync(new LoginModel(RegUser.Email, RegUser.LoginPassword));
-            NavigationManager.NavigateTo("/");
+            NavigationManager.NavigateTo(NavigationProvider["Root"].Link);
         }
         catch (DuplicateEmailException)
         {

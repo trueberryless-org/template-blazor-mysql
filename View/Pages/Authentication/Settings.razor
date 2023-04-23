@@ -21,7 +21,10 @@
                                 <MudStack Spacing="4">
                                     <MudFocusTrap DefaultFocus="DefaultFocus.FirstChild">
                                         <MudStack Spacing="4">
-                                            <MudTextField @bind-Value="User.Username" Label="new username" Variant="Variant.Outlined" Immediate="true"></MudTextField>
+                                            <MudTextField 
+                                                @bind-Value="User.Username" 
+                                                Label="new username" 
+                                                Variant="Variant.Outlined" Immediate="true"/>
                                         </MudStack>
                                     </MudFocusTrap>
                                     <MudButton Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.Save" Color="Color.Primary" FullWidth="true" OnClick="UpdateUsername">Change</MudButton>
@@ -58,8 +61,16 @@
                                 <MudStack Spacing="4">
                                     <MudFocusTrap DefaultFocus="DefaultFocus.FirstChild">
                                         <MudStack Spacing="4">
-                                            <MudTextField @bind-Value="oldPassword" Label="current password" Variant="Variant.Outlined" Immediate="true" InputType="_passwordInputType[0]" Adornment="Adornment.End" AdornmentIcon="@_passwordInputIcon[0]" OnAdornmentClick="() => ShowPwd(0)"></MudTextField>
-                                            <MudTextField @bind-Value="User.Email" Label="new email" Variant="Variant.Outlined" Immediate="true"></MudTextField>
+                                            <MudTextField 
+                                                @bind-Value="oldPassword" 
+                                                Label="current password" 
+                                                Variant="Variant.Outlined" Immediate="true" 
+                                                InputType="_passwordInputType[0]" 
+                                                Adornment="Adornment.End" AdornmentIcon="@_passwordInputIcon[0]" OnAdornmentClick="() => ShowPwd(0)"/>
+                                            <MudTextField 
+                                                @bind-Value="User.Email" 
+                                                Label="new email" 
+                                                Variant="Variant.Outlined" Immediate="true"/>
                                         </MudStack>
                                     </MudFocusTrap>
                                     <MudButton Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.Save" Color="Color.Primary" FullWidth="true" OnClick="UpdateEmail">Change</MudButton>
@@ -96,9 +107,24 @@
                                 <MudStack Spacing="4">
                                     <MudFocusTrap DefaultFocus="DefaultFocus.FirstChild">
                                         <MudStack Spacing="4">
-                                            <MudTextField @bind-Value="oldPassword" Label="old password" Variant="Variant.Outlined" Immediate="true" InputType="_passwordInputType[1]" Adornment="Adornment.End" AdornmentIcon="@_passwordInputIcon[1]" OnAdornmentClick="() => ShowPwd(1)"></MudTextField>
-                                            <MudTextField @bind-Value="User.LoginPassword" Label="new password" Variant="Variant.Outlined" Immediate="true" InputType="_passwordInputType[2]" Adornment="Adornment.End" AdornmentIcon="@_passwordInputIcon[2]" OnAdornmentClick="() => ShowPwd(2)"></MudTextField>
-                                            <MudTextField @bind-Value="confirmPassword" Label="confirm password" Variant="Variant.Outlined" Immediate="true" InputType="_passwordInputType[3]" Adornment="Adornment.End" AdornmentIcon="@_passwordInputIcon[3]" OnAdornmentClick="() => ShowPwd(3)"></MudTextField>
+                                            <MudTextField 
+                                                @bind-Value="oldPassword" 
+                                                Label="old password" 
+                                                Variant="Variant.Outlined" Immediate="true" 
+                                                InputType="_passwordInputType[1]" 
+                                                Adornment="Adornment.End" AdornmentIcon="@_passwordInputIcon[1]" OnAdornmentClick="() => ShowPwd(1)"/>
+                                            <MudTextField 
+                                                @bind-Value="User.LoginPassword" 
+                                                Label="new password" 
+                                                Variant="Variant.Outlined" Immediate="true" 
+                                                InputType="_passwordInputType[2]" 
+                                                Adornment="Adornment.End" AdornmentIcon="@_passwordInputIcon[2]" OnAdornmentClick="() => ShowPwd(2)"/>
+                                            <MudTextField 
+                                                @bind-Value="confirmPassword" 
+                                                Label="confirm password" 
+                                                Variant="Variant.Outlined" Immediate="true" 
+                                                InputType="_passwordInputType[3]" 
+                                                Adornment="Adornment.End" AdornmentIcon="@_passwordInputIcon[3]" OnAdornmentClick="() => ShowPwd(3)"/>
                                         </MudStack>
                                     </MudFocusTrap><MudButton Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.Save" Color="Color.Primary" FullWidth="true" OnClick="UpdatePassword">Change</MudButton>
                                     @if (passwordLeftTokens.CurrentTokens < @AllowedChanges[ELogEntryType.PASSWORD][Change.LIMIT])
@@ -199,7 +225,7 @@
         UserService.CurrentUser!.Username = User.Username;
         
         Snackbar.Add("Username successfully updated", Severity.Success);
-        NavigationManager.NavigateTo("/profile");
+        NavigationManager.NavigateTo(NavigationProvider["Profile"].Link);
     }
 
     public async Task UpdateEmail()
@@ -250,7 +276,7 @@
             });
             UserService.CurrentUser!.Email = User.Email;
             Snackbar.Add("Email successfully updated", Severity.Success);
-            NavigationManager.NavigateTo("/profile");
+            NavigationManager.NavigateTo(NavigationProvider["Profile"].Link);
         }
         catch (DuplicateEmailException)
         {
@@ -309,7 +335,7 @@
         UserService.CurrentUser!.PasswordHash = User.PasswordHash;
 
         Snackbar.Add("Password successfully updated", Severity.Success);
-        NavigationManager.NavigateTo("/profile");
+        NavigationManager.NavigateTo(NavigationProvider["Profile"].Link);
     }
 
     async void TryUpdateUsername(KeyboardEventArgs e)
