@@ -18,3 +18,7 @@ function resizeListener(dotnethelper) {
         console.log("Error during browser resize: " + error);
     });
 }
+
+function scrollListener(element) {
+    return element.scrollTop;
+}

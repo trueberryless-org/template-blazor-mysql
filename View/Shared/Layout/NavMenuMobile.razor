@@ -20,36 +20,44 @@
             </li>
         }
     </ul>
-    <div class="more">
-        <div style="display: flex; align-items: center; user-select: none; margin-top: .3rem">
-            <MudIconButton OnClick="@ToggleOpen" Icon="@Icons.Material.Filled.KeyboardArrowDown" aria-label="delete"></MudIconButton>
-            <MudText Typo="Typo.h6">More</MudText>
+    <MudSwipeArea OnSwipe="OnSwipe" Sensitivity="30">
+        <div class="more">
+            <div style="display: flex; justify-content: center; align-items: center; user-select: none; margin-bottom: .5rem">
+                <MudIcon Icon="@Icons.Material.Filled.HorizontalRule"/>
+                @scrollTop
+            </div>
+            @*<div style="display: flex; align-items: center; user-select: none; margin-top: .3rem">
+                <MudIconButton OnClick="@ToggleOpen" Icon="@Icons.Material.Filled.KeyboardArrowDown" aria-label="delete"></MudIconButton>
+                <MudText Typo="Typo.h6">More</MudText>
+            </div>*@
+            <MudList Clickable="true" class="list" ref="@_mudList">
+                <MudListSubheader class="subheadings">
+                    CONTENT
+                </MudListSubheader>
+                @foreach (var pageElement in NavigationProvider.GetPages(PageType.CONTENT))
+                {
+                    <MudListItem Icon="@pageElement.Icon" OnClick="() => GoTo(pageElement.Link, true)" IconColor="@pageElement.Color" class="item">
+                        @pageElement.Name
+                    </MudListItem>
+                }
+                <MudListSubheader class="subheadings">
+                    ACCOUNT
+                </MudListSubheader>
+                @foreach (var pageElement in NavigationProvider.GetPages(PageType.USER))
+                {
+                    <MudListItem Icon="@pageElement.Icon" OnClick="() => GoTo(pageElement.Link, true)" IconColor="@pageElement.Color" class="item">
+                        @pageElement.Name
+                    </MudListItem>
+                }
+                <MudListItem Icon="@Icons.Material.Filled.Logout" OnClick="LogoutAsync" class="item">
+                    Log out
+                </MudListItem>
+            </MudList>
         </div>
-        <MudList Clickable="true" class="list">
-            <MudListSubheader class="subheadings">
-                CONTENT
-            </MudListSubheader>
-            @foreach (var pageElement in NavigationProvider.GetPages(PageType.CONTENT))
-            {
-                <MudListItem Icon="@pageElement.Icon" OnClick="() => GoTo(pageElement.Link, true)" IconColor="@pageElement.Color" class="item">
-                    @pageElement.Name
-                </MudListItem>
-            }
-            <MudListSubheader class="subheadings">
-                ACCOUNT
-            </MudListSubheader>
-            @foreach (var pageElement in NavigationProvider.GetPages(PageType.USER))
-            {
-                <MudListItem Icon="@pageElement.Icon" OnClick="() => GoTo(pageElement.Link, true)" IconColor="@pageElement.Color" class="item">
-                    @pageElement.Name
-                </MudListItem>
-            }
-            <MudListItem Icon="@Icons.Material.Filled.Logout" OnClick="LogoutAsync" class="item">
-                Log out
-            </MudListItem>
-        </MudList>
-    </div>
+    </MudSwipeArea>
 </div>
+
+<script src="js/listener.js"></script>
 
 @code {
 
@@ -59,17 +67,22 @@
     public bool IsOpen;
     public string MoreIcon = Icons.Material.Filled.MoreHoriz;
 
+    private object?[]? _mudList;
+    double scrollTop;
+
     public void ToggleOpen()
     {
         if (IsOpen)
         {
             IsOpen = false;
             MoreIcon = Icons.Material.Filled.MoreHoriz;
+            EventProvider.OnNavMenuClosed();
         }
         else
         {
             IsOpen = true;
             MoreIcon = Icons.Material.Filled.KeyboardArrowDown;
+            EventProvider.OnNavMenuOpened();
         }
     }
 
@@ -88,6 +101,19 @@
         IsOpen = false;
         await UserService.LogoutAsync();
         NavigationManager.NavigateTo(NavigationProvider["Login"].Link);
+    }
+
+    private void OnSwipe(SwipeDirection direction)
+    {
+        scrollTop = JSRuntime.InvokeAsync<double>("scrollListener", _mudList).Result;
+        Snackbar.Add(scrollTop.ToString(), Severity.Info);
+        StateHasChanged();
+        return;
+        if (direction == SwipeDirection.TopToBottom && IsOpen)
+        {
+            ToggleOpen();
+            StateHasChanged();
+        }
     }
 
 }
@@ -194,9 +220,9 @@
 {
     <style>        
         .navigation {
-            height: 101vh;            
-            border-top-left-radius: 0rem;
-            border-top-right-radius: 0rem;
+            height: 75vh;            
+            /*border-top-left-radius: 1rem;
+            border-top-right-radius: 1rem;*/
             background: @(MainLayout.IsDarkMode ? ThemeHandler.Theme.PaletteDark.Black : ThemeHandler.Theme.Palette.White);
         }
         
@@ -215,7 +241,7 @@
         }
         
         .navigation .more .list {
-            height: 85vh;
+            height: 63vh;
             transform: translateY(0rem);
         }
     </style>

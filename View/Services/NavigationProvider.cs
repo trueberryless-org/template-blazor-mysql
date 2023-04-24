@@ -55,6 +55,125 @@ public class NavigationProvider
                     Icon = Icons.Material.Filled.Home,
                     Priority = PagePriority.IMPORTANT
                 }
+            },{
+                "Verified",
+                new Page()
+                {
+                    Name = "Verified",
+                    Link = "/Verified",
+                    Type = PageType.CONTENT,
+                    Icon = Icons.Material.Filled.Verified
+                }
+            },{
+                "Games",
+                new Page()
+                {
+                    Name = "Games",
+                    Link = "/Games",
+                    Type = PageType.CONTENT,
+                    Icon = Icons.Material.Filled.Games,
+                    Priority = PagePriority.IMPORTANT
+                }
+            },{
+                "Tag",
+                new Page()
+                {
+                    Name = "Tag",
+                    Link = "/Tag",
+                    Type = PageType.CONTENT,
+                    Icon = Icons.Material.Filled.Tag,
+                    Priority = PagePriority.IMPORTANT
+                }
+            },
+            {
+                "Vignette", 
+                new Page()
+                {
+                    Name = "Vignette", 
+                    Link = "/Vignette", 
+                    Type = PageType.CONTENT, 
+                    Icon = Icons.Material.Filled.Vignette
+                }
+            },
+            {
+                "Receipt", 
+                new Page()
+                {
+                    Name = "Receipt", 
+                    Link = "/Receipt", 
+                    Type = PageType.CONTENT, 
+                    Icon = Icons.Material.Filled.Receipt
+                }
+            },
+            {
+                "Mail", 
+                new Page()
+                {
+                    Name = "Mail", 
+                    Link = "/Mail", 
+                    Type = PageType.CONTENT, 
+                    Icon = Icons.Material.Filled.Mail
+                }
+            },
+            {
+                "Backspace", 
+                new Page()
+                {
+                    Name = "Backspace", 
+                    Link = "/Backspace", 
+                    Type = PageType.CONTENT, 
+                    Icon = Icons.Material.Filled.Backspace
+                }
+            },
+            {
+                "Edit", 
+                new Page()
+                {
+                    Name = "Edit", 
+                    Link = "/Edit", 
+                    Type = PageType.CONTENT, 
+                    Icon = Icons.Material.Filled.Edit
+                }
+            },
+            {
+                "Factory", 
+                new Page()
+                {
+                    Name = "Factory", 
+                    Link = "/Factory", 
+                    Type = PageType.CONTENT, 
+                    Icon = Icons.Material.Filled.Factory
+                }
+            },
+            {
+                "Mediation", 
+                new Page()
+                {
+                    Name = "Mediation", 
+                    Link = "/Mediation", 
+                    Type = PageType.CONTENT, 
+                    Icon = Icons.Material.Filled.Mediation
+                }
+            },
+            {
+                "Nature", 
+                new Page()
+                {
+                    Name = "Nature", 
+                    Link = "/Nature", 
+                    Type = PageType.CONTENT, 
+                    Icon = Icons.Material.Filled.Nature
+                }
+            },
+            {
+                "Landscape", 
+                new Page()
+                {
+                    Name = "Landscape", 
+                    Link = "/Landscape", 
+                    Type = PageType.CONTENT, 
+                    Icon = Icons.Material.Filled.Landscape
+                }
             },
         };
     }

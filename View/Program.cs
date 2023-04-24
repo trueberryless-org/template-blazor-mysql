@@ -52,6 +52,7 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IThemeHandler, ThemeHandler>();
 builder.Services.AddScoped<CircuitHandler, CircuitTracker>();
 
+builder.Services.AddScoped<EventProvider>();
 builder.Services.AddScoped<NavigationProvider>();
 builder.Services.AddScoped<DateManager>();
 builder.Services.AddScoped<BrowserService>();

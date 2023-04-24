@@ -2,8 +2,17 @@
 
 public class DateManager
 {
-    public event EventHandler? SelectedDateChanged;
+    private readonly EventProvider _eventProvider;
 
+    public DateManager(EventProvider eventProvider)
+    {
+        _eventProvider = eventProvider;
+        Today = DateTime.Today;
+        SelectedDate = Today;
+
+        _eventProvider.SelectedDateChanged += new EventHandler(HandleDateChangeAsync);
+    }
+    
     private DateTime? _selectedDate;
     public DateTime? SelectedDate
     {
@@ -13,7 +22,7 @@ public class DateManager
             _selectedDate = value;
             
             // raise event
-            SelectedDateChanged?.Invoke(this, EventArgs.Empty);
+            _eventProvider.OnSelectedDateChanged();
         }
     }
 
@@ -23,13 +32,6 @@ public class DateManager
     
     public MudDatePicker? DatePicker { get; set; }
 
-    public DateManager()
-    {
-        Today = DateTime.Today;
-        SelectedDate = Today;
-
-        SelectedDateChanged += new EventHandler(HandleDateChangeAsync);
-    }
 
     public void HandleDateChangeAsync(object? sender, EventArgs e)
     {
