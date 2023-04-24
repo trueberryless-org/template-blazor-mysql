@@ -13,6 +13,7 @@
             <CascadingValue Value="@this">
                 @Body
             </CascadingValue>
+            <div style="height: 7rem;"></div>
         </MudMainContent>
         <CascadingValue Value="@this">
             <NavMenuMobile/>
@@ -29,9 +30,9 @@
             <CascadingValue Value="@this">
                 @Body
             </CascadingValue>
+            <div style="height: 7rem;"></div>
         </MudMainContent>
     }
-    <div style="height: 10vh"></div>
 </MudLayout>
 
 @code {
@@ -55,6 +56,7 @@
 
     protected override async void OnInitialized()
     {
+        BrowserService.Init(JSRuntime);
         // subscribe to browser width change
         BrowserService.Resize += UpdateOrientation;
     }

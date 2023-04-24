@@ -1,6 +1,6 @@
 ﻿<div class="navigation">
     <ul>
-        @foreach (var pageElement in NavigationProvider.GetPages(PageType.CONTENT).Take(3))
+        @foreach (var pageElement in NavigationProvider.GetPagesSorted(PageType.CONTENT).Take(3))
         {
             <li>
                 <a href="@pageElement.Link">
@@ -11,7 +11,7 @@
                 </a>
             </li>
         }
-        @if (NavigationProvider.GetPages(PageType.CONTENT).Count > 3)
+        @if (NavigationProvider.GetPagesSorted(PageType.CONTENT).Count > 3)
         {
             <li onclick="@ToggleOpen">
                 <span class="icon">
@@ -90,10 +90,6 @@
         NavigationManager.NavigateTo(NavigationProvider["Login"].Link);
     }
 
-    protected override async Task OnInitializedAsync()
-    {
-    }
-
 }
 
 <style>
@@ -108,7 +104,7 @@
         border-top-right-radius: .8rem;
         background: @(MainLayout.IsDarkMode ? ThemeHandler.Theme.PaletteDark.White : ThemeHandler.Theme.Palette.Black);
        
-        transition: all .4s ease-in-out;
+        transition: all .5s ease-in-out;
         z-index: 1000;
     }
     
@@ -116,18 +112,23 @@
         position: absolute;
         opacity: 0;
         user-select: none;
-        transition: all .4s ease-in-out;
+        transition: all .5s ease-in-out;
         margin: 3vw;
         width:  100%;
+        color: @(MainLayout.IsDarkMode ? ThemeHandler.Theme.PaletteDark.White : ThemeHandler.Theme.Palette.Black);
     } 
+    
+    .navigation .icon {
+        color: @ThemeHandler.Theme.PaletteDark.White;        
+    }
         
     .navigation .more .list {
-        transition: all .4s ease-in-out;
+        transition: all .5s ease-in-out;
         height: 0vh;
         /*Hide scrolling animation behind navigation bar*/
         transform: translateY(-4rem);
         overflow-y: scroll;
-        overflow-x: hidden;
+        overflow-x: hidden;                        
     }
     
     .navigation .more .list .subheadings {
@@ -173,7 +174,7 @@
         line-height: 4.4rem;
         font-size: 1.5em;
         text-align: center;
-        transition: 0.5s;
+        transition: all .5s ease-in-out;
         color: @(MainLayout.IsDarkMode ? ThemeHandler.Theme.PaletteDark.Dark : ThemeHandler.Theme.Palette.White);
     }
     
@@ -184,7 +185,7 @@
         font-size: 0.75em;
         letter-spacing: 0.05em;
         opacity: 0;
-        transition: 0.5s;
+        transition: all .5s ease-in-out;
         transform: translateY(1rem);
     }  
 </style>
@@ -196,22 +197,21 @@
             height: 101vh;            
             border-top-left-radius: 0rem;
             border-top-right-radius: 0rem;
-            background: @(MainLayout.IsDarkMode ? ThemeHandler.Theme.PaletteDark.Black : ThemeHandler.Theme.Palette.Black);
+            background: @(MainLayout.IsDarkMode ? ThemeHandler.Theme.PaletteDark.Black : ThemeHandler.Theme.Palette.White);
         }
         
         .navigation ul li .icon {
-            color: @(MainLayout.IsDarkMode ? ThemeHandler.Theme.PaletteDark.White : ThemeHandler.Theme.Palette.White);
+            color: @(MainLayout.IsDarkMode ? ThemeHandler.Theme.PaletteDark.White : ThemeHandler.Theme.Palette.Black);
         }
         
         .navigation ul li .text {
-            color: @(MainLayout.IsDarkMode ? ThemeHandler.Theme.PaletteDark.White : ThemeHandler.Theme.Palette.White);
+            color: @(MainLayout.IsDarkMode ? ThemeHandler.Theme.PaletteDark.White : ThemeHandler.Theme.Palette.Black);
         }        
         
         .navigation .more {
             position: absolute;
             opacity: 1;
             user-select: all;
-            transition: all .4s ease-in-out;
         }
         
         .navigation .more .list {
