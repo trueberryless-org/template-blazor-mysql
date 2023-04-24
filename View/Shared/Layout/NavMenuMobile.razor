@@ -76,7 +76,10 @@
     public void GoTo(string link, bool shouldClose)
     {
         if (shouldClose)
+        {
             IsOpen = false;
+            MoreIcon = Icons.Material.Filled.MoreHoriz;
+        }
         NavigationManager.NavigateTo(link);
     }
 
