@@ -42,6 +42,86 @@ public class NavigationProvider
                     Icon = Icons.Material.Filled.Home
                 }
             },
+            {
+                "Vignette", 
+                new Page()
+                {
+                    Name = "Vignette", 
+                    Link = "/Vignette", 
+                    Type = PageType.CONTENT, 
+                    Icon = Icons.Material.Filled.Vignette
+                }
+            },
+            {
+                "Receipt", 
+                new Page()
+                {
+                    Name = "Receipt", 
+                    Link = "/Receipt", 
+                    Type = PageType.CONTENT, 
+                    Icon = Icons.Material.Filled.Receipt
+                }
+            },
+            {
+                "Mail", 
+                new Page()
+                {
+                    Name = "Mail", 
+                    Link = "/Mail", 
+                    Type = PageType.CONTENT, 
+                    Icon = Icons.Material.Filled.Mail
+                }
+            },
+            {
+                "Backspace", 
+                new Page()
+                {
+                    Name = "Backspace", 
+                    Link = "/Backspace", 
+                    Type = PageType.CONTENT, 
+                    Icon = Icons.Material.Filled.Backspace
+                }
+            },
+            {
+                "Verified", 
+                new Page()
+                {
+                    Name = "Verified", 
+                    Link = "/Verified", 
+                    Type = PageType.CONTENT, 
+                    Icon = Icons.Material.Filled.Verified
+                }
+            },
+            {
+                "Edit", 
+                new Page()
+                {
+                    Name = "Edit", 
+                    Link = "/Edit", 
+                    Type = PageType.CONTENT, 
+                    Icon = Icons.Material.Filled.Edit
+                }
+            },
+            {
+                "Factory", 
+                new Page()
+                {
+                    Name = "Factory", 
+                    Link = "/Factory", 
+                    Type = PageType.CONTENT, 
+                    Icon = Icons.Material.Filled.Factory
+                }
+            },
+            {
+                "Games", 
+                new Page()
+                {
+                    Name = "Games", 
+                    Link = "/Games", 
+                    Type = PageType.CONTENT, 
+                    Icon = Icons.Material.Filled.Games
+                }
+            },
         };
     }
 

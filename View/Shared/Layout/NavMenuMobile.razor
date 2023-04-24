@@ -15,14 +15,14 @@
         {
             <li onclick="@ToggleOpen">
                 <span class="icon">
-                    <MudIcon Icon="@Icons.Material.Filled.MoreHoriz" Color="Color.Inherit"/>
+                    <MudIcon Icon="@MoreIcon" Color="Color.Inherit"/>
                 </span>
             </li>
         }
     </ul>
     <div class="more">
         <div style="display: flex; align-items: center; user-select: none; margin-top: .3rem">
-            <MudIconButton OnClick="@ToggleOpen" Icon="@Icons.Material.Filled.ArrowBackIos" aria-label="delete"></MudIconButton>
+            <MudIconButton OnClick="@ToggleOpen" Icon="@Icons.Material.Filled.KeyboardArrowDown" aria-label="delete"></MudIconButton>
             <MudText Typo="Typo.h6">More</MudText>
         </div>
         <MudList Clickable="true" class="list">
@@ -57,13 +57,20 @@
     public MainLayout? MainLayout { get; set; }
 
     public bool IsOpen;
+    public string MoreIcon = Icons.Material.Filled.MoreHoriz;
 
     public void ToggleOpen()
     {
         if (IsOpen)
+        {
             IsOpen = false;
+            MoreIcon = Icons.Material.Filled.MoreHoriz;
+        }
         else
+        {
             IsOpen = true;
+            MoreIcon = Icons.Material.Filled.KeyboardArrowDown;
+        }
     }
 
     public void GoTo(string link, bool shouldClose)
