@@ -41,6 +41,15 @@
                     </MudListItem>
                 }
                 <MudListSubheader class="subheadings">
+                    FOOTER
+                </MudListSubheader>
+                @foreach (var pageElement in NavigationProvider.GetPages(PageType.FOOTER))
+                {
+                    <MudListItem Icon="@pageElement.Icon" OnClick="() => GoTo(pageElement.Link, true)" IconColor="@pageElement.Color" class="item">
+                        @pageElement.Name
+                    </MudListItem>
+                }
+                <MudListSubheader class="subheadings">
                     ACCOUNT
                 </MudListSubheader>
                 @foreach (var pageElement in NavigationProvider.GetPages(PageType.USER))

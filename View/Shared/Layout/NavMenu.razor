@@ -14,7 +14,7 @@
                        Size="Size.Large"
                        Href="/"/>
     </MudDrawerHeader>
-    <MudNavMenu>
+    <MudNavMenu Style="overflow-y: scroll">
         @foreach (var pageElement in NavigationProvider.GetPages(PageType.CONTENT))
         {
             @if (pageElement.Link == "/") continue;
@@ -27,7 +27,7 @@
     </MudNavMenu>
     <MudSpacer/>
 
-    <MudNavMenu Style="margin-bottom: 1rem">
+    <MudNavMenu Style="margin-bottom: 1rem; margin-top: 2rem;">
         <MudNavLink OnClick="ToggleSideMenu" Icon="@ToggleIcon" Match="NavLinkMatch.All" Class="icon-hover">
             <div class="d-flex">
                 <MudText Inline="true" Style="white-space: nowrap;">@ToggleText</MudText>

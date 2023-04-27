@@ -13,7 +13,10 @@
             <CascadingValue Value="@this">
                 @Body
             </CascadingValue>
-            <div style="height: 7rem;"></div>
+            @if (!NavigationManager.Uri.Contains("/footer"))
+            {
+                <div style="height: 7rem;"></div>
+            }
         </MudMainContent>
         <CascadingValue Value="@this">
             <NavMenuMobile/>
@@ -26,10 +29,13 @@
             <NavMenu/>
         </CascadingValue>
 
-        <MudMainContent Style="padding: 0; overflow-x: hidden">
-            <CascadingValue Value="@this">
-                @Body
-            </CascadingValue>
+        <MudMainContent Style="padding: 0; overflow-x: hidden;">
+            <div style="min-height: 100vh">
+                <CascadingValue Value="@this">
+                    @Body
+                </CascadingValue>
+                <div style="height: 7rem;"></div>
+            </div>
             <Footer></Footer>
         </MudMainContent>
     }

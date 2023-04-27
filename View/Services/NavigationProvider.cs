@@ -1,13 +1,16 @@
 ﻿using System.Collections.Specialized;
+using Microsoft.AspNetCore.Components;
 
 namespace View.Services;
 
 public class NavigationProvider
 {
+    private readonly NavigationManager _navigationManager;
     private readonly Dictionary<string, Page> _pages;
 
-    public NavigationProvider()
+    public NavigationProvider(NavigationManager navigationManager)
     {
+        _navigationManager = navigationManager;
         _pages = new Dictionary<string, Page>()
         {
             {
@@ -44,11 +47,19 @@ public class NavigationProvider
                 }
             },
             {
-                "Register",
+                "Imprint",
                 new Page()
                 {
-                    Name = "Register", Link = "/register", Type = PageType.AUTHENTICATION,
-                    Icon = Icons.Material.Filled.PersonAdd
+                    Name = "Imprint", Link = "/imprint", Type = PageType.FOOTER,
+                    Icon = Icons.Material.Filled.Assignment
+                }
+            },
+            {
+                "Sources",
+                new Page()
+                {
+                    Name = "Source", Link = "/source", Type = PageType.FOOTER,
+                    Icon = Icons.Material.Filled.Source
                 }
             },
 
@@ -63,7 +74,8 @@ public class NavigationProvider
                     Icon = Icons.Material.Filled.Home,
                     Priority = PagePriority.IMPORTANT
                 }
-            },{
+            },
+            {
                 "Verified",
                 new Page()
                 {
@@ -72,7 +84,8 @@ public class NavigationProvider
                     Type = PageType.CONTENT,
                     Icon = Icons.Material.Filled.Verified
                 }
-            },{
+            },
+            {
                 "Games",
                 new Page()
                 {
@@ -82,7 +95,8 @@ public class NavigationProvider
                     Icon = Icons.Material.Filled.Games,
                     Priority = PagePriority.IMPORTANT
                 }
-            },{
+            },
+            {
                 "Tag",
                 new Page()
                 {
@@ -94,96 +108,222 @@ public class NavigationProvider
                 }
             },
             {
-                "Vignette", 
+                "Vignette",
                 new Page()
                 {
-                    Name = "Vignette", 
-                    Link = "/Vignette", 
-                    Type = PageType.CONTENT, 
+                    Name = "Vignette",
+                    Link = "/Vignette",
+                    Type = PageType.CONTENT,
                     Icon = Icons.Material.Filled.Vignette
                 }
             },
             {
-                "Receipt", 
+                "Receipt",
                 new Page()
                 {
-                    Name = "Receipt", 
-                    Link = "/Receipt", 
-                    Type = PageType.CONTENT, 
+                    Name = "Receipt",
+                    Link = "/Receipt",
+                    Type = PageType.CONTENT,
                     Icon = Icons.Material.Filled.Receipt
                 }
             },
             {
-                "Mail", 
+                "Mail",
                 new Page()
                 {
-                    Name = "Mail", 
-                    Link = "/Mail", 
-                    Type = PageType.CONTENT, 
+                    Name = "Mail",
+                    Link = "/Mail",
+                    Type = PageType.CONTENT,
                     Icon = Icons.Material.Filled.Mail
                 }
             },
             {
-                "Backspace", 
+                "Backspace",
                 new Page()
                 {
-                    Name = "Backspace", 
-                    Link = "/Backspace", 
-                    Type = PageType.CONTENT, 
+                    Name = "Backspace",
+                    Link = "/Backspace",
+                    Type = PageType.CONTENT,
                     Icon = Icons.Material.Filled.Backspace
                 }
             },
             {
-                "Edit", 
+                "Edit",
                 new Page()
                 {
-                    Name = "Edit", 
-                    Link = "/Edit", 
-                    Type = PageType.CONTENT, 
+                    Name = "Edit",
+                    Link = "/Edit",
+                    Type = PageType.CONTENT,
                     Icon = Icons.Material.Filled.Edit
                 }
             },
             {
-                "Factory", 
+                "Factory",
                 new Page()
                 {
-                    Name = "Factory", 
-                    Link = "/Factory", 
-                    Type = PageType.CONTENT, 
+                    Name = "Factory",
+                    Link = "/Factory",
+                    Type = PageType.CONTENT,
                     Icon = Icons.Material.Filled.Factory
                 }
             },
             {
-                "Mediation", 
+                "Mediation",
                 new Page()
                 {
-                    Name = "Mediation", 
-                    Link = "/Mediation", 
-                    Type = PageType.CONTENT, 
+                    Name = "Mediation",
+                    Link = "/Mediation",
+                    Type = PageType.CONTENT,
                     Icon = Icons.Material.Filled.Mediation
                 }
             },
             {
-                "Nature", 
+                "Nature",
                 new Page()
                 {
-                    Name = "Nature", 
-                    Link = "/Nature", 
-                    Type = PageType.CONTENT, 
+                    Name = "Nature",
+                    Link = "/Nature",
+                    Type = PageType.CONTENT,
                     Icon = Icons.Material.Filled.Nature
                 }
             },
             {
-                "Landscape", 
+                "Landscape",
                 new Page()
                 {
-                    Name = "Landscape", 
-                    Link = "/Landscape", 
-                    Type = PageType.CONTENT, 
+                    Name = "Landscape",
+                    Link = "/Landscape",
+                    Type = PageType.CONTENT,
                     Icon = Icons.Material.Filled.Landscape
                 }
             },
+            {
+                "Tab",
+                new Page()
+                {
+                    Name = "Tab",
+                    Link = "/Tab",
+                    Type = PageType.CONTENT,
+                    Icon = Icons.Material.Filled.Tab
+                }
+            },
+            {
+                "Panorama",
+                new Page()
+                {
+                    Name = "Panorama",
+                    Link = "/Panorama",
+                    Type = PageType.CONTENT,
+                    Icon = Icons.Material.Filled.Panorama
+                }
+            },
+            {
+                "Elevator",
+                new Page()
+                {
+                    Name = "Elevator",
+                    Link = "/Elevator",
+                    Type = PageType.CONTENT,
+                    Icon = Icons.Material.Filled.Elevator
+                }
+            },
+            {
+                "Water",
+                new Page()
+                {
+                    Name = "Water",
+                    Link = "/Water",
+                    Type = PageType.CONTENT,
+                    Icon = Icons.Material.Filled.Water
+                }
+            },
         };
+
+        var url = _navigationManager.Uri;
+
+        switch (GetSubdomain(url))
+        {
+            case null:
+                break;
+            case "api":
+                if (GetFirstPath(url) == string.Empty)
+                {
+                    
+                }
+                else
+                {
+                    _pages.Add(
+                        GetFirstPath(url),
+                        new Page()
+                        {
+                            Name = GetFirstPath(url),
+                            Link = GetNewUrl(url, GetFirstPath(url)),
+                            Type = PageType.RELATED
+                        }
+                    );
+                    _pages.Add(
+                        "Docs",
+                        new Page()
+                        {
+                            Name = "Docs",
+                            Link = GetNewUrl(url, "docs", GetFirstPath(url)),
+                            Type = PageType.RELATED,
+                            Icon = Icons.Material.Filled.Code
+                        }
+                    );
+                }
+                break;
+            case "docs":
+                if (GetFirstPath(url) == string.Empty)
+                {
+                    
+                }
+                else
+                {
+                    _pages.Add(
+                        GetFirstPath(url),
+                        new Page()
+                        {
+                            Name = GetFirstPath(url),
+                            Link = GetNewUrl(url, GetFirstPath(url)),
+                            Type = PageType.RELATED
+                        }
+                    );
+                    _pages.Add(
+                        "API",
+                        new Page()
+                        {
+                            Name = "API",
+                            Link = GetNewUrl(url, "api", GetFirstPath(url)),
+                            Type = PageType.RELATED,
+                            Icon = Icons.Material.Filled.Api
+                        }
+                    );
+                }
+                break;
+            default:
+                _pages.Add(
+                    "API",
+                    new Page()
+                    {
+                        Name = "API",
+                        Link = GetNewUrl(url, "api", GetSubdomain(url)),
+                        Type = PageType.RELATED,
+                        Icon = Icons.Material.Filled.Api
+                    }
+                );
+                _pages.Add(
+                    "Docs",
+                    new Page()
+                    {
+                        Name = "Docs",
+                        Link = GetNewUrl(url, "docs", GetSubdomain(url)),
+                        Type = PageType.RELATED,
+                        Icon = Icons.Material.Filled.Code
+                    }
+                );
+                break;
+        }
     }
 
     public Page this[string name] => _pages[name];
@@ -218,6 +358,88 @@ public class NavigationProvider
                 .OrderBy(p => (int)p.Priority)
                 .ToList();
     }
+    
+    public static string GetNewUrl(string url, string? newSubdomain)
+    {
+        // Split the URL into its components
+        var uri = new Uri(url);
+        var scheme = uri.Scheme;
+        var host = uri.Host;
+
+        // Split the host into its subdomains
+        var domainParts = host.Split('.').ToList();
+
+        if (domainParts.Count < 2)
+        {
+            throw new ArgumentException("Domain must at least contain of Top-Level-Domain and Second-Level-Domain");
+        }
+
+        // Rebuild the URL with the new subdomain and the new path
+        if (newSubdomain == null)
+        {
+            return $"{scheme}://{domainParts[^2]}.{domainParts[^1]}";
+        }
+        else
+        {
+            return $"{scheme}://{newSubdomain}.{domainParts[^2]}.{domainParts[^1]}";
+        }
+    }
+
+    public static string GetNewUrl(string url, string? newSubdomain, string newPath)
+    {
+        // Split the URL into its components
+        var uri = new Uri(url);
+        var scheme = uri.Scheme;
+        var host = uri.Host;
+
+        // Split the host into its subdomains
+        var domainParts = host.Split('.').ToList();
+
+        if (domainParts.Count < 2)
+        {
+            throw new ArgumentException("Domain must at least contain of Top-Level-Domain and Second-Level-Domain");
+        }
+
+        // Rebuild the URL with the new subdomain and the new path
+        if (newSubdomain == null)
+        {
+            return $"{scheme}://{domainParts[^2]}.{domainParts[^1]}/{newPath}";
+        }
+        else
+        {
+            return $"{scheme}://{newSubdomain}.{domainParts[^2]}.{domainParts[^1]}/{newPath}";
+        }
+    }
+
+    public static string? GetSubdomain(string url)
+    {
+        // Split the URL into its components
+        var uri = new Uri(url);
+        var host = uri.Host;
+
+        // Split the host into its subdomains
+        var subdomains = host.Split('.').ToList();
+
+        return subdomains.Count < 3 ? null : subdomains[0];
+    }
+
+    public static string GetFirstPath(string url)
+    {
+        var uri = new Uri(url);
+        var path = uri.AbsolutePath;
+        if (string.IsNullOrEmpty(path))
+        {
+            return string.Empty;
+        }
+
+        var parts = path.Split('/', StringSplitOptions.RemoveEmptyEntries);
+        if (parts.Length == 0)
+        {
+            return string.Empty;
+        }
+
+        return parts[0];
+    }
 }
 
 public struct Page
@@ -247,6 +469,7 @@ public enum PageType
     AUTHENTICATION,
     CONTENT,
     FOOTER,
+    RELATED,
     SERVICE,
     USER,
 }
