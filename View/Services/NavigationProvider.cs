@@ -43,6 +43,14 @@ public class NavigationProvider
                     Icon = Icons.Material.Filled.PersonAdd
                 }
             },
+            {
+                "Register",
+                new Page()
+                {
+                    Name = "Register", Link = "/register", Type = PageType.AUTHENTICATION,
+                    Icon = Icons.Material.Filled.PersonAdd
+                }
+            },
 
             // Add pages here (everything else is automatic) #https://mudblazor.com/features/icons#icons
             {
@@ -238,6 +246,7 @@ public enum PageType
 {
     AUTHENTICATION,
     CONTENT,
+    FOOTER,
     SERVICE,
     USER,
 }

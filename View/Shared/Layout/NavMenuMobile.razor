@@ -20,16 +20,16 @@
             </li>
         }
     </ul>
-    <MudSwipeArea OnSwipe="OnSwipe" Sensitivity="30">
+    @*<MudSwipeArea OnSwipe="OnSwipe" Sensitivity="30">*@
         <div class="more">
-            <div style="display: flex; justify-content: center; align-items: center; user-select: none; margin-bottom: .5rem">
+            @*<div style="display: flex; justify-content: center; align-items: center; user-select: none; margin-bottom: .5rem">
                 <MudIcon Icon="@Icons.Material.Filled.HorizontalRule"/>
                 @scrollTop
-            </div>
-            @*<div style="display: flex; align-items: center; user-select: none; margin-top: .3rem">
+            </div>*@
+            <div style="display: flex; align-items: center; user-select: none; margin-top: .3rem">
                 <MudIconButton OnClick="@ToggleOpen" Icon="@Icons.Material.Filled.KeyboardArrowDown" aria-label="delete"></MudIconButton>
                 <MudText Typo="Typo.h6">More</MudText>
-            </div>*@
+            </div>
             <MudList Clickable="true" class="list" ref="@_mudList">
                 <MudListSubheader class="subheadings">
                     CONTENT
@@ -54,10 +54,8 @@
                 </MudListItem>
             </MudList>
         </div>
-    </MudSwipeArea>
+    @*</MudSwipeArea>*@
 </div>
-
-<script src="js/listener.js"></script>
 
 @code {
 
@@ -220,7 +218,7 @@
 {
     <style>        
         .navigation {
-            height: 75vh;            
+            height: 101vh;            
             /*border-top-left-radius: 1rem;
             border-top-right-radius: 1rem;*/
             background: @(MainLayout.IsDarkMode ? ThemeHandler.Theme.PaletteDark.Black : ThemeHandler.Theme.Palette.White);
@@ -241,7 +239,7 @@
         }
         
         .navigation .more .list {
-            height: 63vh;
+            height: 86vh;
             transform: translateY(0rem);
         }
     </style>

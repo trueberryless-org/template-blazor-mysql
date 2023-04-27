@@ -25,12 +25,12 @@
         <CascadingValue Value="@this">
             <NavMenu/>
         </CascadingValue>
-        
+
         <MudMainContent Style="padding: 0; overflow-x: hidden">
             <CascadingValue Value="@this">
                 @Body
             </CascadingValue>
-            <div style="height: 7rem;"></div>
+            <Footer></Footer>
         </MudMainContent>
     }
 </MudLayout>
@@ -57,7 +57,7 @@
     protected override async void OnInitialized()
     {
         BrowserService.Init(JSRuntime);
-        // subscribe to browser width change
+    // subscribe to browser width change
         BrowserService.Resize += UpdateOrientation;
     }
 

@@ -1,0 +1,174 @@
+﻿@page "/footer"
+
+<footer>
+    <div class="footer-container">
+        <div class="footer-element">
+            <h5>Cool websites</h5>
+            <hr length="short"/>
+            <div class="space-between">
+                <div class="mr-3">
+                    <div>
+                        <a href="https://cuberto.com/" class="link" youtube-font>cuberto</a>
+                    </div>
+                    <div>
+                        <a href="https://stackoverflow.com/" class="link" youtube-font>
+                            Stack Overflow
+                        </a>
+                    </div>
+                    <div>
+                        <a href="https://www.youtube.com/c/KurzgesagtDE" class="link" youtube-font>
+                            Kurzgesagt
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer-element">
+            <h5>Sources</h5>
+            <hr length="short"/>
+            <div>
+                <a href="/components/law/quellen.html" class="link" youtube-font>alle Quellen</a>
+            </div>
+            <br/>
+            <div class="grid" grid-columns="2">
+                <div>Schriftarten:</div>
+                <div>
+                    <a href="https://fonts.google.com/" class="link" youtube-font>Google Fonts</a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-element">
+            <h5>Copyright</h5>
+            <hr length="short"/>
+            <div>&copy; @DateTime.Now.Year</div>
+            <div>
+                trueberryless
+            </div>
+            <br/>
+            <div>
+                <a href="/imprint" class="link" youtube-font>Imprint</a>
+            </div>
+            <div>
+                <a href="/sources" class="link" youtube-font>Sources</a>
+            </div>
+        </div>
+        <div class="footer-element">
+            <h5>Donation</h5>
+            <hr length="short"/>
+            <div></div>
+            <strong>
+                <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=FT9TT4LP8GD6Y"
+                    class="fg-link">
+                    Donate me a beer please! 
+                </a>
+            </strong>
+        </div>
+    </div>
+    <a style="cursor: default" id="vogel_a" class="footer-vogel">
+        <img loading="lazy" src="" alt="" id="vogel"/>
+    </a>
+</footer>
+
+<style>
+    footer {
+      position: relative;
+      padding: 5rem 5rem 10rem 5rem;
+      background-color: hsl(220, 10%, 20%);
+      font-size: 1rem;
+      color: hsl(0, 0%, 100%);
+      min-height: 20rem;
+      display: -webkit-box;
+      display: -ms-flexbox;
+      display: flex;
+      -webkit-box-pack: center;
+          -ms-flex-pack: center;
+              justify-content: center;
+      -webkit-box-align: center;
+          -ms-flex-align: center;
+              align-items: center;
+    }
+    footer > .footer-container {
+      position: relative;
+      display: inline-grid;
+      row-gap: 3rem;
+      -webkit-column-gap: 3rem;
+         -moz-column-gap: 3rem;
+              column-gap: 3rem;
+    }
+    footer > .footer-container > .footer-element {
+      min-width: 10rem;
+    }
+    footer > .footer-container > .footer-element > .grid {
+      display: inline-grid;
+      row-gap: 0;
+      -webkit-column-gap: 1rem;
+         -moz-column-gap: 1rem;
+              column-gap: 1rem;
+      width: 100%;
+      margin-block: 0.5rem;
+    }
+    footer .footer-vogel {
+      position: absolute;
+      left: 50vw;
+      -webkit-transform: translateX(-50%);
+              transform: translateX(-50%);
+      bottom: 1rem;
+      max-height: 3rem;
+      max-width: 3rem;
+    }
+    footer .footer-vogel img {
+      width: 100%;
+      height: 100%;
+    }
+    h5 {
+      font-family: "Raleway", sans-serif;
+      font-size: clamp(1.2rem, 1.64vw, 1.5rem);
+      font-weight: 600;
+      margin: 0.75rem 0;
+    }
+    hr {
+      position: relative;
+      width: 100%;
+      height: 0.25rem;
+      margin: 1.5rem 0;
+      background-color: hsl(0, 0%, 60%);
+      border-radius: 20px;
+    }
+    hr[length=fluid] {
+      width: 100vw;
+    }
+    hr[length=long] {
+      width: 20rem;
+    }
+    hr[length=medium] {
+      width: 10rem;
+    }
+    hr[length=short] {
+      width: 5rem;
+    }
+    
+    @@media (min-width: 60em) {
+      footer > .footer-container {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      footer > .footer-container > .footer-element > .grid {
+        margin-block: 0;
+      }
+      footer > .footer-container > .footer-element > .grid[grid-columns="2"] {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    @@media (min-width: 100em) {
+      footer {
+        padding-bottom: 5rem;
+      }
+      footer > .footer-container {
+        grid-template-columns: repeat(4, 1fr);
+      }
+      footer .footer-vogel {
+        left: 1rem;
+        -webkit-transform: translateX(0%);
+                transform: translateX(0%);
+      }
+    }
+</style>

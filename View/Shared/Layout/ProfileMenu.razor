@@ -1,5 +1,5 @@
 ﻿<div style="position: absolute; top: 1.4rem; right: 1rem; z-index: 100">
-    <MudMenu Ref="@_mudMenu" AnchorOrigin="Origin.BottomRight" TransformOrigin="Origin.TopRight">
+    <MudMenu @ref="_mudMenu"  AnchorOrigin="Origin.BottomRight" TransformOrigin="Origin.TopRight">
         <ActivatorContent>
             <MudFab Color="Color.Secondary" StartIcon="@Icons.Material.Filled.Person"/>
         </ActivatorContent>
@@ -26,7 +26,7 @@
 
 @code {
 
-    private MudMenu _mudMenu;
+    private MudMenu? _mudMenu;
 
     public async Task LogoutAsync()
     {
@@ -34,15 +34,14 @@
         NavigationManager.NavigateTo(NavigationProvider["Login"].Link);
     }
 
-    /*protected override async Task OnInitializedAsync()
+    protected override async Task OnInitializedAsync()
     {
         EventProvider.NavMenuOpened += new EventHandler(CloseProfileMenu);
     }
 
     private void CloseProfileMenu(object? sender, EventArgs e)
     {
-        _mudMenu.CloseMenu();
-        StateHasChanged();
-    }*/
+        _mudMenu?.CloseMenu();
+    }
 
 }

@@ -1,6 +1,6 @@
 ﻿namespace View.Services;
 
-public class EventProvider
+public sealed class EventProvider
 {
     public event EventHandler? SelectedDateChanged;
 
@@ -18,21 +18,21 @@ public class EventProvider
 
     public event EventHandler? ProfileMenuClosed;
 
-    public virtual void OnProfileMenuClosed()
+    public void OnProfileMenuClosed()
     {
         ProfileMenuClosed?.Invoke(this, EventArgs.Empty);
     }
 
     public event EventHandler? NavMenuOpened;
 
-    public virtual void OnNavMenuOpened()
+    public void OnNavMenuOpened()
     {
         NavMenuOpened?.Invoke(this, EventArgs.Empty);
     }
 
     public event EventHandler? NavMenuClosed;
 
-    public virtual void OnNavMenuClosed()
+    public void OnNavMenuClosed()
     {
         NavMenuClosed?.Invoke(this, EventArgs.Empty);
     }
