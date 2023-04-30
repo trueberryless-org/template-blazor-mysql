@@ -1,0 +1,473 @@
+﻿@page "/settings"
+
+<PageTitle>Settings</PageTitle>
+
+<AuthorizeView>
+    <Authorized>
+        <MudContainer Class="mt-8">
+            <MudStack Spacing="4">
+                <h1 class="ms-4 mb-12">Settings</h1>
+
+                <MudExpansionPanels DisableBorders="true">
+                    <MudExpansionPanel @bind-IsExpanded="changeUsernameIsOpen" HideIcon="true">
+                        <TitleContent>
+                            <div class="d-flex">
+                                <MudText Class="mt-1">Change <span Style="@($"color:{(MainLayout.IsDarkMode ? ThemeHandler.Theme.PaletteDark.Warning : ThemeHandler.Theme.Palette.Secondary)};")">@(changeUsernameIsOpen ? UserService.CurrentUser!.Username : "Username")</span></MudText>
+                                <MudIcon Icon="@Icons.Material.Filled.ShortText" Color="Color.Default" Class="d-flex ml-auto"/>
+                            </div>
+                        </TitleContent>
+                        <ChildContent>
+                            <div @onkeydown="@TryUpdateUsername">
+                                <MudStack Spacing="4">
+                                    <MudFocusTrap DefaultFocus="DefaultFocus.FirstChild">
+                                        <MudStack Spacing="4">
+                                            <MudTextField 
+                                                @bind-Value="User.Username" 
+                                                Label="new username" 
+                                                Variant="Variant.Outlined" Immediate="true"/>
+                                        </MudStack>
+                                    </MudFocusTrap>
+                                    <MudButton Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.Save" Color="Color.Primary" FullWidth="true" OnClick="UpdateUsername">Change</MudButton>
+                                    @if (usernameLeftTokens.CurrentTokens < @AllowedChanges[ELogEntryType.USERNAME][Change.LIMIT])
+                                    {
+                                        switch (usernameLeftTokens.CurrentTokens)
+                                        {
+                                            case 0:
+                                                <MudAlert Severity="Severity.Error">@usernameLeftTokens.CurrentTokens @(usernameLeftTokens.CurrentTokens == 1 ? "token" : "tokens") left - refill on @usernameLeftTokens.GetMoreDate.ToShortDateString()</MudAlert>
+                                                break;
+                                            case 1:
+                                                <MudAlert Severity="Severity.Warning">@usernameLeftTokens.CurrentTokens @(usernameLeftTokens.CurrentTokens == 1 ? "token" : "tokens") left - refill on @usernameLeftTokens.GetMoreDate.ToShortDateString()</MudAlert>
+                                                break;
+                                            default:
+                                                <MudAlert Severity="Severity.Info">@usernameLeftTokens.CurrentTokens @(usernameLeftTokens.CurrentTokens == 1 ? "token" : "tokens") left - refill on @usernameLeftTokens.GetMoreDate.ToShortDateString()</MudAlert>
+                                                break;
+                                        }
+                                    }
+                                    <MudAlert Severity="Severity.Info">You can change the username @AllowedChanges[ELogEntryType.USERNAME][Change.LIMIT] times within @AllowedChanges[ELogEntryType.USERNAME][Change.PERIOD] days.</MudAlert>
+                                </MudStack>
+                            </div>
+                        </ChildContent>
+                    </MudExpansionPanel>
+
+                    <MudExpansionPanel @bind-IsExpanded="changeEmailIsOpen" HideIcon="true">
+                        <TitleContent>
+                            <div class="d-flex">
+                                <MudText Class="mt-1">Change <span Style="@($"color:{(MainLayout.IsDarkMode ? ThemeHandler.Theme.PaletteDark.Warning : ThemeHandler.Theme.Palette.Secondary)};")">@(changeEmailIsOpen ? UserService.CurrentUser!.Email : "E-Mail")</span></MudText>
+                                <MudIcon Icon="@Icons.Material.Filled.Email" Color="Color.Default" Class="d-flex ml-auto"/>
+                            </div>
+                        </TitleContent>
+                        <ChildContent>
+                            <div @onkeydown="@TryUpdateEmail">
+                                <MudStack Spacing="4">
+                                    <MudFocusTrap DefaultFocus="DefaultFocus.FirstChild">
+                                        <MudStack Spacing="4">
+                                            <MudTextField 
+                                                @bind-Value="oldPassword" 
+                                                Label="current password" 
+                                                Variant="Variant.Outlined" Immediate="true" 
+                                                InputType="_passwordInputType[0]" 
+                                                Adornment="Adornment.End" AdornmentIcon="@_passwordInputIcon[0]" OnAdornmentClick="() => ShowPwd(0)"/>
+                                            <MudTextField 
+                                                @bind-Value="User.Email" 
+                                                Label="new email" 
+                                                Variant="Variant.Outlined" Immediate="true"/>
+                                        </MudStack>
+                                    </MudFocusTrap>
+                                    <MudButton Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.Save" Color="Color.Primary" FullWidth="true" OnClick="UpdateEmail">Change</MudButton>
+                                    @if (emailLeftTokens.CurrentTokens < @AllowedChanges[ELogEntryType.EMAIL][Change.LIMIT])
+                                    {
+                                        switch (emailLeftTokens.CurrentTokens)
+                                        {
+                                            case 0:
+                                                <MudAlert Severity="Severity.Error">@emailLeftTokens.CurrentTokens @(emailLeftTokens.CurrentTokens == 1 ? "token" : "tokens") left - refill on @emailLeftTokens.GetMoreDate.ToShortDateString()</MudAlert>
+                                                break;
+                                            case 1:
+                                                <MudAlert Severity="Severity.Warning">@emailLeftTokens.CurrentTokens @(emailLeftTokens.CurrentTokens == 1 ? "token" : "tokens") left - refill on @emailLeftTokens.GetMoreDate.ToShortDateString()</MudAlert>
+                                                break;
+                                            default:
+                                                <MudAlert Severity="Severity.Info">@emailLeftTokens.CurrentTokens @(emailLeftTokens.CurrentTokens == 1 ? "token" : "tokens") left - refill on @emailLeftTokens.GetMoreDate.ToShortDateString()</MudAlert>
+                                                break;
+                                        }
+                                    }
+                                    <MudAlert Severity="Severity.Info">You can change the email @AllowedChanges[ELogEntryType.EMAIL][Change.LIMIT] times within @AllowedChanges[ELogEntryType.EMAIL][Change.PERIOD] days.</MudAlert>
+                                </MudStack>
+                            </div>
+                        </ChildContent>
+                    </MudExpansionPanel>
+
+                    <MudExpansionPanel @bind-IsExpanded="changePasswordIsOpen" HideIcon="true">
+                        <TitleContent>
+                            <div class="d-flex">
+                                <MudText Class="mt-1">Change <span Style="@($"color:{(MainLayout.IsDarkMode ? ThemeHandler.Theme.PaletteDark.Warning : ThemeHandler.Theme.Palette.Secondary)};")">Password</span></MudText>
+                                <MudIcon Icon="@Icons.Material.Filled.Password" Color="Color.Default" Class="d-flex ml-auto"/>
+                            </div>
+                        </TitleContent>
+                        <ChildContent>
+                            <div @onkeydown="@TryUpdatePassword">
+                                <MudStack Spacing="4">
+                                    <MudFocusTrap DefaultFocus="DefaultFocus.FirstChild">
+                                        <MudStack Spacing="4">
+                                            <MudTextField 
+                                                @bind-Value="oldPassword" 
+                                                Label="old password" 
+                                                Variant="Variant.Outlined" Immediate="true" 
+                                                InputType="_passwordInputType[1]" 
+                                                Adornment="Adornment.End" AdornmentIcon="@_passwordInputIcon[1]" OnAdornmentClick="() => ShowPwd(1)"/>
+                                            <MudTextField 
+                                                @bind-Value="User.LoginPassword" 
+                                                Label="new password" 
+                                                Variant="Variant.Outlined" Immediate="true" 
+                                                InputType="_passwordInputType[2]" 
+                                                Adornment="Adornment.End" AdornmentIcon="@_passwordInputIcon[2]" OnAdornmentClick="() => ShowPwd(2)"/>
+                                            <MudTextField 
+                                                @bind-Value="confirmPassword" 
+                                                Label="confirm password" 
+                                                Variant="Variant.Outlined" Immediate="true" 
+                                                InputType="_passwordInputType[3]" 
+                                                Adornment="Adornment.End" AdornmentIcon="@_passwordInputIcon[3]" OnAdornmentClick="() => ShowPwd(3)"/>
+                                        </MudStack>
+                                    </MudFocusTrap><MudButton Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.Save" Color="Color.Primary" FullWidth="true" OnClick="UpdatePassword">Change</MudButton>
+                                    @if (passwordLeftTokens.CurrentTokens < @AllowedChanges[ELogEntryType.PASSWORD][Change.LIMIT])
+                                    {
+                                        switch (passwordLeftTokens.CurrentTokens)
+                                        {
+                                            case 0:
+                                                <MudAlert Severity="Severity.Error">@passwordLeftTokens.CurrentTokens @(passwordLeftTokens.CurrentTokens == 1 ? "token" : "tokens") left - refill on @passwordLeftTokens.GetMoreDate.ToShortDateString()</MudAlert>
+                                                break;
+                                            case 1:
+                                                <MudAlert Severity="Severity.Warning">@passwordLeftTokens.CurrentTokens @(passwordLeftTokens.CurrentTokens == 1 ? "token" : "tokens") left - refill on @passwordLeftTokens.GetMoreDate.ToShortDateString()</MudAlert>
+                                                break;
+                                            default:
+                                                <MudAlert Severity="Severity.Info">@passwordLeftTokens.CurrentTokens @(passwordLeftTokens.CurrentTokens == 1 ? "token" : "tokens") left - refill on @passwordLeftTokens.GetMoreDate.ToShortDateString()</MudAlert>
+                                                break;
+                                        }
+                                    }
+                                    <MudAlert Severity="Severity.Info">You can change the password @AllowedChanges[ELogEntryType.PASSWORD][Change.LIMIT] times within @AllowedChanges[ELogEntryType.PASSWORD][Change.PERIOD] days.</MudAlert>
+                                    <MudLink Href="/reset-password">Forgot current password? -> Reset it!</MudLink>
+                                </MudStack>
+                            </div>
+                        </ChildContent>
+                    </MudExpansionPanel>
+                </MudExpansionPanels>
+
+                <MudPaper class="px-4 py-1" Elevation="3">
+                    <div style="display: flex; justify-content: space-between; align-items: center; min-height: 4rem">
+                        <div Style="@($"color:{(MainLayout.IsDarkMode ? ThemeHandler.Theme.PaletteDark.Warning : ThemeHandler.Theme.Palette.Secondary)};")">Theme Mode:</div>
+                        <MudCheckBox T="bool?" CheckedChanged="ToggleTheme" Checked="IsDarkMode" TriState="true" Color="Color.Secondary">
+                            @(IsDarkMode == null ? "Auto" : (IsDarkMode == true) ? "Dark" : "Light")
+                        </MudCheckBox>
+                    </div>
+                </MudPaper>
+            </MudStack>
+        </MudContainer>
+    </Authorized>
+</AuthorizeView>
+
+
+@code {
+
+    [CascadingParameter]
+    public MainLayout? MainLayout { get; set; }
+
+    bool changeUsernameIsOpen = false;
+    bool changeEmailIsOpen = false;
+    bool changePasswordIsOpen = false;
+
+    public User User { get; set; } = new User();
+
+    public string? oldPassword;
+    public string? confirmPassword;
+
+    public Dictionary<ELogEntryType, Dictionary<Change, int>> AllowedChanges = new Dictionary<ELogEntryType, Dictionary<Change, int>>()
+    {
+        { ELogEntryType.USERNAME, new Dictionary<Change, int>() { { Change.LIMIT, 5 }, { Change.PERIOD, 90 } } },
+        { ELogEntryType.EMAIL, new Dictionary<Change, int>() { { Change.LIMIT, 3 }, { Change.PERIOD, 60 } } },
+        { ELogEntryType.PASSWORD, new Dictionary<Change, int>() { { Change.LIMIT, 6 }, { Change.PERIOD, 30 } } }
+    };
+
+    public LeftTokens usernameLeftTokens;
+    public LeftTokens emailLeftTokens;
+    public LeftTokens passwordLeftTokens;
+
+    public async Task UpdateUsername()
+    {
+        if (!await UserService.IsAuthenticated()) return;
+        if (User.Username == "")
+        {
+            Snackbar.Add($"Username cannot be empty!", Severity.Warning);
+            return;
+        }
+        if (User.Username == UserService.CurrentUser!.Username)
+        {
+            Snackbar.Add($"This is already your username!", Severity.Info);
+            return;
+        }
+        if ((await LogEntryRepository.ReadAsync(le =>
+            le.UserId == UserService.CurrentUser!.Id &&
+            le.FieldType == ELogEntryType.USERNAME &&
+            le.DateValue.CompareTo(DateOnly.FromDateTime(DateTime.Today.AddDays(-AllowedChanges[ELogEntryType.USERNAME][Change.PERIOD]))) >= 0)).Count >= AllowedChanges[ELogEntryType.USERNAME][Change.LIMIT])
+        {
+            Snackbar.Add($"You have to wait until {usernameLeftTokens.GetMoreDate.ToShortDateString()} to change your username again.", Severity.Warning);
+            return;
+        }
+
+        User.Email = UserService.CurrentUser!.Email;
+        User.PasswordHash = UserService.CurrentUser!.PasswordHash;
+        await UserRepository.UpdateInfoAsync(User);
+        await LogEntryRepository.CreateAsync(new LogEntry()
+        {
+            UserId = UserService.CurrentUser!.Id,
+            DateValue = DateOnly.FromDateTime(DateTime.Today),
+            FieldType = ELogEntryType.USERNAME,
+            OldValue = UserService.CurrentUser!.Username,
+            NewValue = User.Username
+        });
+        UserService.CurrentUser!.Username = User.Username;
+        
+        Snackbar.Add("Username successfully updated", Severity.Success);
+        NavigationManager.NavigateTo(NavigationProvider["Profile"].Link);
+    }
+
+    public async Task UpdateEmail()
+    {
+        if (!await UserService.IsAuthenticated()) return;
+        
+        if (oldPassword == null)
+        {
+            Snackbar.Add($"Please confirm your identity with your old password!", Severity.Info);
+            return;
+        }
+        if (User.Email == "")
+        {
+            Snackbar.Add($"Email cannot be empty!", Severity.Warning);
+            return;
+        }
+        if (User.Email == UserService.CurrentUser!.Email)
+        {
+            Snackbar.Add($"This is already your email!", Severity.Info);
+            return;
+        }
+        if (!User.VerifyPassword(oldPassword, UserService.CurrentUser!.PasswordHash))
+        {
+            Snackbar.Add("Wrong password", Severity.Error);
+            return;
+        }
+        if ((await LogEntryRepository.ReadAsync(le =>
+            le.UserId == UserService.CurrentUser!.Id &&
+            le.FieldType == ELogEntryType.EMAIL &&
+            le.DateValue.CompareTo(DateOnly.FromDateTime(DateTime.Today.AddDays(-AllowedChanges[ELogEntryType.EMAIL][Change.PERIOD]))) >= 0)).Count >= AllowedChanges[ELogEntryType.EMAIL][Change.LIMIT])
+        {
+            Snackbar.Add($"You have to wait until {emailLeftTokens.GetMoreDate.ToShortDateString()} to change your email again.", Severity.Warning);
+            return;
+        }
+
+        User.Username = UserService.CurrentUser!.Username;
+        User.PasswordHash = UserService.CurrentUser!.PasswordHash;
+        try
+        {
+            await UserRepository.UpdateInfoAsync(User);
+            await LogEntryRepository.CreateAsync(new LogEntry()
+            {
+                UserId = UserService.CurrentUser!.Id,
+                DateValue = DateOnly.FromDateTime(DateTime.Today),
+                FieldType = ELogEntryType.EMAIL,
+                OldValue = UserService.CurrentUser!.Email,
+                NewValue = User.Email
+            });
+            UserService.CurrentUser!.Email = User.Email;
+            Snackbar.Add("Email successfully updated", Severity.Success);
+            NavigationManager.NavigateTo(NavigationProvider["Profile"].Link);
+        }
+        catch (DuplicateEmailException)
+        {
+            Snackbar.Add("Email already exists", Severity.Error);
+        }
+        catch (Exception e)
+        {
+            Snackbar.Add("Something went wrong", Severity.Error);
+        }
+    }
+
+    public async Task UpdatePassword()
+    {
+        if (!await UserService.IsAuthenticated()) return;
+        if (oldPassword == null)
+        {
+            Snackbar.Add($"Please confirm your identity with your old password!", Severity.Info);
+            return;
+        }
+        if (User.LoginPassword == "")
+        {
+            Snackbar.Add($"Password cannot be empty!", Severity.Warning);
+            return;
+        }
+        if (!User.VerifyPassword(oldPassword, UserService.CurrentUser!.PasswordHash))
+        {
+            Snackbar.Add("Wrong password", Severity.Error);
+            return;
+        }
+        if (User.VerifyPassword(User.LoginPassword, UserService.CurrentUser!.PasswordHash))
+        {
+            Snackbar.Add($"This is already your password!", Severity.Info);
+            return;
+        }
+        if ((await LogEntryRepository.ReadAsync(le =>
+            le.UserId == UserService.CurrentUser!.Id &&
+            le.FieldType == ELogEntryType.PASSWORD &&
+            le.DateValue.CompareTo(DateOnly.FromDateTime(DateTime.Today.AddDays(-AllowedChanges[ELogEntryType.PASSWORD][Change.PERIOD]))) >= 0)).Count >= AllowedChanges[ELogEntryType.PASSWORD][Change.LIMIT])
+        {
+            Snackbar.Add($"You have to wait until {passwordLeftTokens.GetMoreDate.ToShortDateString()} to change your password again.", Severity.Warning);
+            return;
+        }
+
+        User.Username = UserService.CurrentUser!.Username;
+        User.Email = UserService.CurrentUser!.Email;
+        User.PasswordHash = User.HashPassword(User.LoginPassword);
+        await UserRepository.UpdateInfoAsync(User);
+        await LogEntryRepository.CreateAsync(new LogEntry()
+        {
+            UserId = UserService.CurrentUser!.Id,
+            DateValue = DateOnly.FromDateTime(DateTime.Today),
+            FieldType = ELogEntryType.PASSWORD,
+            OldValue = UserService.CurrentUser!.PasswordHash,
+            NewValue = User.PasswordHash
+        });
+        UserService.CurrentUser!.PasswordHash = User.PasswordHash;
+
+        Snackbar.Add("Password successfully updated", Severity.Success);
+        NavigationManager.NavigateTo(NavigationProvider["Profile"].Link);
+    }
+
+    async void TryUpdateUsername(KeyboardEventArgs e)
+    {
+        if (e.Code is "Enter" or "NumpadEnter")
+            await UpdateUsername();
+    }
+
+    async void TryUpdateEmail(KeyboardEventArgs e)
+    {
+        if (e.Code is "Enter" or "NumpadEnter")
+            await UpdateEmail();
+    }
+
+    async void TryUpdatePassword(KeyboardEventArgs e)
+    {
+        if (e.Code is "Enter" or "NumpadEnter")
+            await UpdatePassword();
+    }
+
+    public bool? IsDarkMode { get; set; }
+
+    public void ToggleTheme(bool? changedtheme)
+    {
+        IsDarkMode = changedtheme;
+        MainLayout!.ToggleDarkMode(IsDarkMode);
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (!await UserService.IsAuthenticated()) return;
+        User.Id = UserService.CurrentUser!.Id;
+
+        usernameLeftTokens = new LeftTokens()
+        {
+            GetMoreDate = (await LogEntryRepository.ReadAsync(le =>
+                le.UserId == UserService.CurrentUser!.Id &&
+                le.FieldType == ELogEntryType.USERNAME &&
+                le.DateValue.CompareTo(DateOnly.FromDateTime(DateTime.Today.AddDays(-AllowedChanges[ELogEntryType.USERNAME][Change.PERIOD]))) >= 0))
+                .OrderBy(le => le.DateValue)
+                .Select(le => le.DateValue).FirstOrDefault().AddDays(AllowedChanges[ELogEntryType.USERNAME][Change.PERIOD] + 1),
+            CurrentTokens = AllowedChanges[ELogEntryType.USERNAME][Change.LIMIT] - (await LogEntryRepository.ReadAsync(le =>
+                le.UserId == UserService.CurrentUser!.Id &&
+                le.FieldType == ELogEntryType.USERNAME &&
+                le.DateValue.CompareTo(DateOnly.FromDateTime(DateTime.Today.AddDays(-AllowedChanges[ELogEntryType.USERNAME][Change.PERIOD]))) >= 0)).Count
+        };
+
+        emailLeftTokens = new LeftTokens()
+        {
+            GetMoreDate = (await LogEntryRepository.ReadAsync(le =>
+                le.UserId == UserService.CurrentUser!.Id &&
+                le.FieldType == ELogEntryType.EMAIL &&
+                le.DateValue.CompareTo(DateOnly.FromDateTime(DateTime.Today.AddDays(-AllowedChanges[ELogEntryType.EMAIL][Change.PERIOD]))) >= 0))
+                .OrderBy(le => le.DateValue)
+                .Select(le => le.DateValue).FirstOrDefault().AddDays(AllowedChanges[ELogEntryType.EMAIL][Change.PERIOD] + 1),
+            CurrentTokens = AllowedChanges[ELogEntryType.EMAIL][Change.LIMIT] - (await LogEntryRepository.ReadAsync(le =>
+                le.UserId == UserService.CurrentUser!.Id &&
+                le.FieldType == ELogEntryType.EMAIL &&
+                le.DateValue.CompareTo(DateOnly.FromDateTime(DateTime.Today.AddDays(-AllowedChanges[ELogEntryType.EMAIL][Change.PERIOD]))) >= 0)).Count
+        };
+
+        passwordLeftTokens = new LeftTokens()
+        {
+            GetMoreDate = (await LogEntryRepository.ReadAsync(le =>
+                le.UserId == UserService.CurrentUser!.Id &&
+                le.FieldType == ELogEntryType.PASSWORD &&
+                le.DateValue.CompareTo(DateOnly.FromDateTime(DateTime.Today.AddDays(-AllowedChanges[ELogEntryType.PASSWORD][Change.PERIOD]))) >= 0))
+                .OrderBy(le => le.DateValue)
+                .Select(le => le.DateValue).FirstOrDefault().AddDays(AllowedChanges[ELogEntryType.PASSWORD][Change.PERIOD] + 1),
+            CurrentTokens = AllowedChanges[ELogEntryType.PASSWORD][Change.LIMIT] - (await LogEntryRepository.ReadAsync(le =>
+                le.UserId == UserService.CurrentUser!.Id &&
+                le.FieldType == ELogEntryType.PASSWORD &&
+                le.DateValue.CompareTo(DateOnly.FromDateTime(DateTime.Today.AddDays(-AllowedChanges[ELogEntryType.PASSWORD][Change.PERIOD]))) >= 0)).Count
+        };
+    }
+
+    protected async override Task OnAfterRenderAsync(bool firstRender)
+    {
+        var darkModeResult = await ProtectedLocalStorage.GetAsync<bool?>("DarkMode");
+
+        IsDarkMode = null;
+        if (darkModeResult.Success && darkModeResult.Value.HasValue)
+        {
+            IsDarkMode = darkModeResult.Value.Value;
+        }
+        StateHasChanged();
+    }
+
+    bool[] _isShow = new bool[4];
+
+    string[] _passwordInputIcon = new string[]
+    {
+        Icons.Material.Filled.VisibilityOff,
+        Icons.Material.Filled.VisibilityOff,
+        Icons.Material.Filled.VisibilityOff,
+        Icons.Material.Filled.VisibilityOff
+    };
+
+    InputType[] _passwordInputType = new InputType[]
+    {
+        InputType.Password,
+        InputType.Password,
+        InputType.Password,
+        InputType.Password
+    };
+
+    void ShowPwd(int index)
+    {
+        if (_isShow[index])
+        {
+            _isShow[index] = false;
+            _passwordInputIcon[index] = Icons.Material.Filled.VisibilityOff;
+            _passwordInputType[index] = InputType.Password;
+        }
+        else
+        {
+            _isShow[index] = true;
+            _passwordInputIcon[index] = Icons.Material.Filled.Visibility;
+            _passwordInputType[index] = InputType.Text;
+        }
+    }
+
+    public struct LeftTokens
+    {
+        public DateOnly GetMoreDate;
+        public int CurrentTokens;
+    }
+
+    public enum Change
+    {
+        PERIOD,
+        LIMIT
+    }
+
+}

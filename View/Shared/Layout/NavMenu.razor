@@ -1,0 +1,131 @@
+﻿<MudDrawer Breakpoint="Breakpoint.Md"
+           Class="side-menu"
+           Elevation="0"
+           MiniWidth="100px"
+           OpenMiniOnHover="ThemeHandler.SideOpenMini"
+           Variant="DrawerVariant.Mini"
+           Width="280px"
+           OpenChanged="@(value => {if (ThemeHandler.SideOpenMini) { ThemeHandler.SideOpen = value; } })"
+           DisableOverlay="true"
+           Open="ThemeHandler.SideOpen">
+    <MudDrawerHeader Class="align-center d-flex justify-center pa-0 mb-2 mt-2">
+        <MudIconButton Color="Color.Primary"
+                       Icon="@Icons.Filled.Home"
+                       Size="Size.Large"
+                       Href="/"/>
+    </MudDrawerHeader>
+    <MudNavMenu Style="overflow-y: scroll">
+        @foreach (var pageElement in NavigationProvider.GetPages(PageType.CONTENT))
+        {
+            @if (pageElement.Link == "/") continue;
+            <MudNavLink Href="@(pageElement.Link)" Icon="@(pageElement.Icon)" Match="NavLinkMatch.All" Class="icon-hover">
+                <div class="d-flex">
+                    <MudText Inline="true" Style="white-space: nowrap;">@pageElement.Name</MudText>
+                </div>
+            </MudNavLink>
+        }
+    </MudNavMenu>
+    <MudSpacer/>
+
+    <MudNavMenu Style="margin-bottom: 1rem; margin-top: 2rem;">
+        <MudNavLink OnClick="ToggleSideMenu" Icon="@ToggleIcon" Match="NavLinkMatch.All" Class="icon-hover">
+            <div class="d-flex">
+                <MudText Inline="true" Style="white-space: nowrap;">@ToggleText</MudText>
+            </div>
+        </MudNavLink>
+    </MudNavMenu>
+    
+    
+    <MudNavMenu Style="margin-bottom: 1rem">
+        @foreach (var pageElement in NavigationProvider.GetPages(PageType.USER))
+        {
+            <MudNavLink Href="@(pageElement.Link)" Icon="@(pageElement.Icon)" Match="NavLinkMatch.All" Class="icon-hover">
+                <div class="d-flex">
+                    <MudText Inline="true" Style="white-space: nowrap;">@pageElement.Name</MudText>
+                </div>
+            </MudNavLink>
+        }
+        <MudNavLink OnClick="LogoutAsync" Icon="@Icons.Material.Filled.Logout" Match="NavLinkMatch.All" Class="icon-hover">
+            <div class="d-flex">
+                <MudText Inline="true" Style="white-space: nowrap;">Log Out</MudText>
+            </div>
+        </MudNavLink>
+    </MudNavMenu>
+</MudDrawer>
+
+@code {
+
+    [CascadingParameter]
+    public MainLayout? MainLayout { get; set; }
+
+    string ToggleIcon = Icons.Material.Filled.ArrowDropDownCircle;
+    string ToggleText = "Responsive";
+
+    public async Task LogoutAsync()
+    {
+        await UserService.LogoutAsync();
+        NavigationManager.NavigateTo(NavigationProvider["Login"].Link);
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        
+    }
+
+    public async Task ToggleSideMenu()
+    {
+        switch (ThemeHandler.ESideMenuState)
+        {
+            case ESideMenuState.Maximized:
+                ThemeHandler.UpdateSideMenu(ESideMenuState.Responsive);
+                ToggleIcon = Icons.Material.Filled.ArrowDropDownCircle;
+                ToggleText = "Responsive";
+                break;
+            case ESideMenuState.Responsive:
+                ThemeHandler.UpdateSideMenu(ESideMenuState.Minimized);
+                ToggleIcon = Icons.Material.Filled.ArrowCircleLeft;
+                ToggleText = "Minimized";
+                break;
+            case ESideMenuState.Minimized:
+                ThemeHandler.UpdateSideMenu(ESideMenuState.Maximized);
+                ToggleIcon = Icons.Material.Filled.ArrowCircleRight;
+                ToggleText = "Maximized";
+                break;
+        }
+        StateHasChanged();
+    }
+
+}
+
+<style>
+    .icon-hover:hover {
+        background: none;
+    }
+    
+    .toggle-button {
+        border-radius: 1000px !important;
+    }
+    
+    .icon-hover:hover .mud-icon-root {
+        fill: @(MainLayout.IsDarkMode ? ThemeHandler.Theme.PaletteDark.Secondary : ThemeHandler.Theme.Palette.SecondaryDarken);
+    }
+    
+    .mud-nav-link {
+        white-space: normal !important;
+        padding: 12px 16px 12px 38px;
+    }
+    
+    .mud-nav-link:hover {
+        color: @(MainLayout.IsDarkMode ? ThemeHandler.Theme.PaletteDark.Secondary : ThemeHandler.Theme.Palette.SecondaryDarken);
+        background-color: blue;
+    }
+    
+    .mud-navmenu.mud-navmenu-default .mud-nav-link.active:not(.mud-nav-link-disabled) {
+        background-color: rgba(@(MainLayout.IsDarkMode ? ThemeHandler.Theme.PaletteDark.Primary : ThemeHandler.Theme.Palette.PrimaryDarken), 0.1);
+        border-right: 3px solid @(MainLayout.IsDarkMode ? ThemeHandler.Theme.PaletteDark.Primary : ThemeHandler.Theme.Palette.PrimaryDarken);
+    }
+    
+    .side-menu {
+        border-right: 1px solid rgba(@(MainLayout.IsDarkMode ? ThemeHandler.Theme.PaletteDark.Secondary : ThemeHandler.Theme.Palette.SecondaryDarken), 0.4);
+    }
+</style>

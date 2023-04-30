@@ -1,0 +1,255 @@
+﻿<div class="navigation">
+    <ul>
+        @foreach (var pageElement in NavigationProvider.GetPagesSorted(PageType.CONTENT).Take(3))
+        {
+            <li>
+                <a href="@pageElement.Link">
+                    <span class="icon">
+                        <MudIcon Icon="@pageElement.Icon" Color="Color.Inherit"/>
+                    </span>
+                    <span class="text">@pageElement.Name</span>
+                </a>
+            </li>
+        }
+        @if (NavigationProvider.GetPagesSorted(PageType.CONTENT).Count > 3)
+        {
+            <li onclick="@ToggleOpen">
+                <span class="icon">
+                    <MudIcon Icon="@MoreIcon" Color="Color.Inherit"/>
+                </span>
+            </li>
+        }
+    </ul>
+    @*<MudSwipeArea OnSwipe="OnSwipe" Sensitivity="30">*@
+        <div class="more">
+            @*<div style="display: flex; justify-content: center; align-items: center; user-select: none; margin-bottom: .5rem">
+                <MudIcon Icon="@Icons.Material.Filled.HorizontalRule"/>
+                @scrollTop
+            </div>*@
+            <div style="display: flex; align-items: center; user-select: none; margin-top: .3rem">
+                <MudIconButton OnClick="@ToggleOpen" Icon="@Icons.Material.Filled.KeyboardArrowDown" aria-label="delete"></MudIconButton>
+                <MudText Typo="Typo.h6">More</MudText>
+            </div>
+            <MudList Clickable="true" class="list" ref="@_mudList">
+                <MudListSubheader class="subheadings">
+                    CONTENT
+                </MudListSubheader>
+                @foreach (var pageElement in NavigationProvider.GetPages(PageType.CONTENT))
+                {
+                    <MudListItem Icon="@pageElement.Icon" OnClick="() => GoTo(pageElement.Link, true)" IconColor="@pageElement.Color" class="item">
+                        @pageElement.Name
+                    </MudListItem>
+                }
+                <MudListSubheader class="subheadings">
+                    FOOTER
+                </MudListSubheader>
+                @foreach (var pageElement in NavigationProvider.GetPages(PageType.FOOTER))
+                {
+                    <MudListItem Icon="@pageElement.Icon" OnClick="() => GoTo(pageElement.Link, true)" IconColor="@pageElement.Color" class="item">
+                        @pageElement.Name
+                    </MudListItem>
+                }
+                <MudListSubheader class="subheadings">
+                    ACCOUNT
+                </MudListSubheader>
+                @foreach (var pageElement in NavigationProvider.GetPages(PageType.USER))
+                {
+                    <MudListItem Icon="@pageElement.Icon" OnClick="() => GoTo(pageElement.Link, true)" IconColor="@pageElement.Color" class="item">
+                        @pageElement.Name
+                    </MudListItem>
+                }
+                <MudListItem Icon="@Icons.Material.Filled.Logout" OnClick="LogoutAsync" class="item">
+                    Log out
+                </MudListItem>
+            </MudList>
+        </div>
+    @*</MudSwipeArea>*@
+</div>
+
+@code {
+
+    [CascadingParameter]
+    public MainLayout? MainLayout { get; set; }
+
+    public bool IsOpen;
+    public string MoreIcon = Icons.Material.Filled.MoreHoriz;
+
+    private object?[]? _mudList;
+    double scrollTop;
+
+    public void ToggleOpen()
+    {
+        if (IsOpen)
+        {
+            IsOpen = false;
+            MoreIcon = Icons.Material.Filled.MoreHoriz;
+            EventProvider.OnNavMenuClosed();
+        }
+        else
+        {
+            IsOpen = true;
+            MoreIcon = Icons.Material.Filled.KeyboardArrowDown;
+            EventProvider.OnNavMenuOpened();
+        }
+    }
+
+    public void GoTo(string link, bool shouldClose)
+    {
+        if (shouldClose)
+        {
+            IsOpen = false;
+            MoreIcon = Icons.Material.Filled.MoreHoriz;
+        }
+        NavigationManager.NavigateTo(link);
+    }
+
+    public async Task LogoutAsync()
+    {
+        IsOpen = false;
+        await UserService.LogoutAsync();
+        NavigationManager.NavigateTo(NavigationProvider["Login"].Link);
+    }
+
+    private void OnSwipe(SwipeDirection direction)
+    {
+        scrollTop = JSRuntime.InvokeAsync<double>("scrollListener", _mudList).Result;
+        Snackbar.Add(scrollTop.ToString(), Severity.Info);
+        StateHasChanged();
+        return;
+        if (direction == SwipeDirection.TopToBottom && IsOpen)
+        {
+            ToggleOpen();
+            StateHasChanged();
+        }
+    }
+
+}
+
+<style>
+    .navigation {
+        position: fixed;
+        height: 4rem;
+        bottom: -0.1rem;
+        left: 0rem;
+        right: 0rem;
+        
+        border-top-left-radius: .8rem;
+        border-top-right-radius: .8rem;
+        background: @(MainLayout.IsDarkMode ? ThemeHandler.Theme.PaletteDark.White : ThemeHandler.Theme.Palette.Black);
+       
+        transition: all .5s ease-in-out;
+        z-index: 1000;
+    }
+    
+    .navigation .more {
+        position: absolute;
+        opacity: 0;
+        user-select: none;
+        transition: all .5s ease-in-out;
+        margin: 3vw;
+        width:  100%;
+        color: @(MainLayout.IsDarkMode ? ThemeHandler.Theme.PaletteDark.White : ThemeHandler.Theme.Palette.Black);
+    } 
+    
+    .navigation .icon {
+        color: @ThemeHandler.Theme.PaletteDark.White;        
+    }
+        
+    .navigation .more .list {
+        transition: all .5s ease-in-out;
+        height: 0vh;
+        /*Hide scrolling animation behind navigation bar*/
+        transform: translateY(-4rem);
+        overflow-y: scroll;
+        overflow-x: hidden;                        
+    }
+    
+    .navigation .more .list .subheadings {
+        margin-bottom: -.5rem;
+        color: @(MainLayout.IsDarkMode ? ThemeHandler.Theme.PaletteDark.Warning : ThemeHandler.Theme.Palette.Secondary);
+    }
+    
+    .navigation .more .list .subheadings:not(:first-of-type) {
+        margin-top: 2rem;
+    }
+    
+    .navigation ul {
+        position: absolute;
+        bottom: 0;
+        display: flex;
+        justify-content: space-around;
+        width: 90vw;
+        margin-left: 5vw;
+    }
+    
+    .navigation ul li {
+        position: relative;
+        list-style: none;
+        width: 4rem;
+        height: 4rem;
+        z-index: 1;
+    }
+    
+    .navigation ul li a {
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        width: 100%;
+        text-align: center;
+        font-weight: 500;
+    }
+    
+    .navigation ul li .icon {
+        position: relative;
+        display: block;
+        line-height: 4.4rem;
+        font-size: 1.5em;
+        text-align: center;
+        transition: all .5s ease-in-out;
+        color: @(MainLayout.IsDarkMode ? ThemeHandler.Theme.PaletteDark.Dark : ThemeHandler.Theme.Palette.White);
+    }
+    
+    .navigation ul li .text {
+        position: absolute;
+        color: @(MainLayout.IsDarkMode ? ThemeHandler.Theme.PaletteDark.Black : ThemeHandler.Theme.Palette.White);
+        font-weight: 400;
+        font-size: 0.75em;
+        letter-spacing: 0.05em;
+        opacity: 0;
+        transition: all .5s ease-in-out;
+        transform: translateY(1rem);
+    }  
+</style>
+
+@if (IsOpen)
+{
+    <style>        
+        .navigation {
+            height: 101vh;            
+            /*border-top-left-radius: 1rem;
+            border-top-right-radius: 1rem;*/
+            background: @(MainLayout.IsDarkMode ? ThemeHandler.Theme.PaletteDark.Black : ThemeHandler.Theme.Palette.White);
+        }
+        
+        .navigation ul li .icon {
+            color: @(MainLayout.IsDarkMode ? ThemeHandler.Theme.PaletteDark.White : ThemeHandler.Theme.Palette.Black);
+        }
+        
+        .navigation ul li .text {
+            color: @(MainLayout.IsDarkMode ? ThemeHandler.Theme.PaletteDark.White : ThemeHandler.Theme.Palette.Black);
+        }        
+        
+        .navigation .more {
+            position: absolute;
+            opacity: 1;
+            user-select: all;
+        }
+        
+        .navigation .more .list {
+            height: 86vh;
+            transform: translateY(0rem);
+        }
+    </style>
+}

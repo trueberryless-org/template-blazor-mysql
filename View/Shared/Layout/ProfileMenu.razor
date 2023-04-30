@@ -1,0 +1,47 @@
+﻿<div style="position: absolute; top: 1.4rem; right: 1rem; z-index: 100">
+    <MudMenu @ref="_mudMenu"  AnchorOrigin="Origin.BottomRight" TransformOrigin="Origin.TopRight">
+        <ActivatorContent>
+            <MudFab Color="Color.Secondary" StartIcon="@Icons.Material.Filled.Person"/>
+        </ActivatorContent>
+        <ChildContent>
+            <AuthorizeView>
+                <Authorized>
+                    <MudMenuItem href="@NavigationProvider["Profile"].Link">Profile</MudMenuItem>
+                    <MudMenuItem href="@NavigationProvider["Settings"].Link">Settings</MudMenuItem>
+                    <MudMenuItem OnClick="LogoutAsync" IconSize="Size.Small">Log out</MudMenuItem>
+                </Authorized>
+                <NotAuthorized>
+                    <MudMenuItem href="@NavigationProvider["Login"].Link" IconSize="Size.Small" IconColor="Color.Tertiary" Icon="@Icons.Material.Filled.Login">
+                        <MudButton href="@NavigationProvider["Login"].Link" Variant="Variant.Filled" Color="Color.Primary">Log In</MudButton>
+                    </MudMenuItem>
+                    <MudMenuItem href="@NavigationProvider["Register"].Link" IconSize="Size.Small" IconColor="Color.Tertiary" Icon="@Icons.Material.Filled.EmojiPeople">
+                        <MudButton href="@NavigationProvider["Register"].Link" Variant="Variant.Filled" Color="Color.Secondary">Sign Up</MudButton>
+                    </MudMenuItem>
+                </NotAuthorized>
+            </AuthorizeView>
+        </ChildContent>
+    </MudMenu>
+</div>
+
+
+@code {
+
+    private MudMenu? _mudMenu;
+
+    public async Task LogoutAsync()
+    {
+        await UserService.LogoutAsync();
+        NavigationManager.NavigateTo(NavigationProvider["Login"].Link);
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        EventProvider.NavMenuOpened += new EventHandler(CloseProfileMenu);
+    }
+
+    private void CloseProfileMenu(object? sender, EventArgs e)
+    {
+        _mudMenu?.CloseMenu();
+    }
+
+}

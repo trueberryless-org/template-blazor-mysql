@@ -1,0 +1,58 @@
+﻿@using System.Net.Http
+@using System.Globalization
+@using System.Security.Authentication
+
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Components.Forms
+@using Microsoft.AspNetCore.Components.Routing
+@using Microsoft.AspNetCore.Components.Web
+@using Microsoft.AspNetCore.Components.Web.Virtualization
+@using Microsoft.AspNetCore.Components
+
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
+
+@using MudBlazor
+
+@using Domain
+@using Domain.Exceptions
+@using Domain.Extensions
+@using Domain.Repositories
+@using Domain.Repositories.Implementations
+@using Domain.Repositories.Interfaces
+@using Microsoft.JSInterop
+
+@using Model
+@using Model.Configuration
+@using Model.Entities
+@using Model.Entities.Theme
+
+@using View
+@using View.Components
+@using View.Pages
+@using View.Pages.Authentication
+@using View.Services
+@using View.Shared
+@using View.Shared.Layout
+@using View.Shared.DataHandler
+
+@inject IJSRuntime JSRuntime
+@inject BrowserService BrowserService
+
+@inject UserService UserService
+@inject NavigationManager NavigationManager
+
+@inject ILogEntryRepository LogEntryRepository
+@inject IRoleClaimRepository RoleClaimRepository
+@inject IRoleRepository RoleRepository
+@inject IUserRepository UserRepository
+
+@inject ILogger<Login> Logger
+@inject ISnackbar Snackbar
+@inherits CancellationComponent
+@inject IThemeHandler ThemeHandler
+@inject ProtectedLocalStorage ProtectedLocalStorage
+
+@inject EventProvider EventProvider
+@inject DateManager DateManager
+@inject NavigationProvider NavigationProvider

@@ -1,0 +1,73 @@
+﻿@page "/profile"
+
+<PageTitle>Profile</PageTitle>
+
+<AuthorizeView>
+    <Authorized>
+        <MudContainer Class="mt-8">
+            <MudStack Spacing="4">
+                <h1 class="ms-4 mb-12">Profile</h1>
+
+                <MudPaper class="pa-4" Elevation="3">
+                    <div Style="@($"color:{(MainLayout.IsDarkMode ? ThemeHandler.Theme.PaletteDark.Warning : ThemeHandler.Theme.Palette.Secondary)};")">Username:</div>
+                    @if (UserService.CurrentUser != null)
+                    {
+                        <p style="font-size: clamp(1rem, 20px, 2rem);">
+                            @UserService.CurrentUser?.Username
+                        </p>
+                    }
+                    else
+                    {
+                        <p>
+                            Loading...
+                        </p>
+                    }
+                </MudPaper>
+
+                <MudPaper class="pa-4" Elevation="3">
+                    <div Style="@($"color:{(MainLayout.IsDarkMode ? ThemeHandler.Theme.PaletteDark.Warning : ThemeHandler.Theme.Palette.Secondary)};")">E-Mail Address:</div>
+
+                    @if (UserService.CurrentUser != null)
+                    {
+                        <p style="font-size: clamp(1rem, 20px, 2rem);">
+                            @UserService.CurrentUser?.Email
+                        </p>
+                    }
+                    else
+                    {
+                        <p>
+                            Loading...
+                        </p>
+                    }
+                </MudPaper>
+                <MudButton StartIcon="@Icons.Material.Filled.Logout" Disabled="@_processing" OnClick="LogoutAsync" Variant="Variant.Filled" Color="Color.Primary">
+                    @if (_processing)
+                    {
+                        <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true"/>
+                        <MudText Class="ms-2">Processing</MudText>
+                    }
+                    else
+                    {
+                        <MudText>Log Out</MudText>
+                    }
+                </MudButton>
+            </MudStack>
+        </MudContainer>
+    </Authorized>
+</AuthorizeView>
+
+@code {
+
+    [CascadingParameter]
+    public MainLayout? MainLayout { get; set; }
+
+    
+    private bool _processing = false;
+    
+    public async Task LogoutAsync()
+    {
+        _processing = true;
+        await UserService.LogoutAsync();
+        NavigationManager.NavigateTo(NavigationProvider["Login"].Link);
+    }
+}

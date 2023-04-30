@@ -1,0 +1,15 @@
+﻿@page "/"
+
+@code {
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender) return;
+        
+        if (await UserService.IsAuthenticated())
+            NavigationManager.NavigateTo(NavigationProvider["Home"].Link);
+        else
+            NavigationManager.NavigateTo(NavigationProvider["Login"].Link);
+    }
+
+}

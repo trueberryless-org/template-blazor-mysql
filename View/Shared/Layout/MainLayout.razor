@@ -1,0 +1,105 @@
+﻿@inherits LayoutComponentBase
+
+<MudThemeProvider IsDarkMode="@IsDarkMode" @ref="@_mudThemeProvider"/>
+<MudDialogProvider/>
+<MudSnackbarProvider/>
+
+<PageTitle>WebApp</PageTitle>
+
+<MudLayout>
+    @if (BrowserService.IsPortrait)
+    {
+        <MudMainContent Style="padding: 0; overflow-x: hidden">
+            <CascadingValue Value="@this">
+                @Body
+            </CascadingValue>
+            @if (!NavigationManager.Uri.Contains("/footer"))
+            {
+                <div style="height: 7rem;"></div>
+            }
+        </MudMainContent>
+        <CascadingValue Value="@this">
+            <NavMenuMobile/>
+        </CascadingValue>
+        <ProfileMenu/>
+    }
+    else
+    {
+        <CascadingValue Value="@this">
+            <NavMenu/>
+        </CascadingValue>
+
+        <MudMainContent Style="padding: 0; overflow-x: hidden;">
+            <div style="min-height: 100vh">
+                <CascadingValue Value="@this">
+                    @Body
+                </CascadingValue>
+                <div style="height: 7rem;"></div>
+            </div>
+            <Footer></Footer>
+        </MudMainContent>
+    }
+</MudLayout>
+
+@code {
+    public bool IsDarkMode;
+
+    private MudThemeProvider? _mudThemeProvider;
+
+    public async void ToggleDarkMode(bool? changedDarkMode)
+    {
+        if (changedDarkMode.HasValue)
+        {
+            IsDarkMode = changedDarkMode.Value;
+        }
+        else
+        {
+            IsDarkMode = await _mudThemeProvider!.GetSystemPreference();
+        }
+        StateHasChanged();
+        await ProtectedLocalStorage.SetAsync("DarkMode", changedDarkMode!);
+    }
+
+    protected override async void OnInitialized()
+    {
+        BrowserService.Init(JSRuntime);
+    // subscribe to browser width change
+        BrowserService.Resize += UpdateOrientation;
+    }
+
+    private void UpdateOrientation(object? sender, bool b)
+    {
+        StateHasChanged();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender)
+            return;
+
+
+    // darkMode
+        try
+        {
+            var darkModeResult = await ProtectedLocalStorage.GetAsync<bool?>("DarkMode");
+
+            IsDarkMode = await _mudThemeProvider!.GetSystemPreference();
+            if (darkModeResult is { Success: true, Value: { } })
+            {
+                IsDarkMode = darkModeResult.Value.Value;
+            }
+        }
+        catch (CryptographicException)
+        {
+            await ProtectedLocalStorage.DeleteAsync("DarkMode");
+        }
+        catch (Exception e)
+        {
+            IsDarkMode = true;
+            await ProtectedLocalStorage.SetAsync("DarkMode", true);
+        }
+
+        StateHasChanged();
+    }
+
+}

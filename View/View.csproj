@@ -1,0 +1,39 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>net7.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.0">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="MudBlazor" Version="6.1.5" />
+        <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="7.0.0-alpha.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Domain\Domain.csproj" />
+        <ProjectReference Include="..\Model\Model.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="Pages\Statistics\StatisticView.razor" />
+      <_ContentIncludedByDefault Remove="Pages\ManageActivities\EditActivity.razor" />
+      <_ContentIncludedByDefault Remove="Pages\ManageActivities\NewActivity.razor" />
+      <_ContentIncludedByDefault Remove="Pages\ManageActivities\ViewActivities.razor" />
+      <_ContentIncludedByDefault Remove="Pages\ManageExercises\EditExercise.razor" />
+      <_ContentIncludedByDefault Remove="Pages\ManageExercises\NewExercise.razor" />
+      <_ContentIncludedByDefault Remove="Pages\ManageExercises\ViewExercises.razor" />
+      <_ContentIncludedByDefault Remove="Pages\ManageWorkouts\EditWorkout.razor" />
+      <_ContentIncludedByDefault Remove="Pages\ManageWorkouts\NewWorkout.razor" />
+      <_ContentIncludedByDefault Remove="Pages\ManageWorkouts\ViewWorkoutDetails.razor" />
+      <_ContentIncludedByDefault Remove="Pages\ManageWorkouts\ViewWorkouts.razor" />
+      <_ContentIncludedByDefault Remove="Shared\Auth\AccountInputComponent.razor" />
+      <_ContentIncludedByDefault Remove="Shared\Auth\AccountMenu.razor" />
+    </ItemGroup>
+
+</Project>
