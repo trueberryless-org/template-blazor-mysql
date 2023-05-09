@@ -10,7 +10,7 @@
                     @foreach (var related in NavigationProvider.GetPages(PageType.RELATED))
                     {
                         <div>
-                            <a href="@related.Link" class="link" youtube-font>@related.Name</a>
+                            <a href="@related.Link" class="footer-link" youtube-font>@related.Name</a>
                         </div>
                     }
                 </div>
@@ -22,15 +22,15 @@
             <div class="grid" grid-columns="2">
                 <div>Framework:</div>
                 <div>
-                    <a href="https://learn.microsoft.com/de-de/aspnet/core/?view=aspnetcore-7.0" class="link" youtube-font>ASP.NET Core</a>
+                    <a href="https://learn.microsoft.com/de-de/aspnet/core/?view=aspnetcore-7.0" class="footer-link" youtube-font>ASP.NET Core</a>
                 </div>
                 <div>UI library:</div>
                 <div>
-                    <a href="https://mudblazor.com/" class="link" youtube-font>MudBlazor</a>
+                    <a href="https://mudblazor.com/" class="footer-link" youtube-font>MudBlazor</a>
                 </div>
                 <div>Database:</div>
                 <div>
-                    <a href="https://www.mongodb.com/" class="link" youtube-font>MongoDB</a>
+                    <a href="https://www.mongodb.com/" class="footer-link" youtube-font>MySQL</a>
                 </div>
             </div>
         </div>
@@ -43,10 +43,10 @@
             </div>
             <br/>
             <div>
-                <a href="/imprint" class="link" youtube-font>Imprint</a>
+                <a href="/imprint" class="footer-link" youtube-font>Imprint</a>
             </div>
             <div>
-                <a href="/sources" class="link" youtube-font>Sources</a>
+                <a href="/sources" class="footer-link" youtube-font>Sources</a>
             </div>
         </div>
         <div class="footer-element">
@@ -54,25 +54,114 @@
             <hr length="short"/>
             <div></div>
             <strong>
-                <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=FT9TT4LP8GD6Y"
-                    class="fg-link">
-                    Please donate me a beer!
+                <a href="https://www.paypal.com/donate/?hosted_button_id=WDQ5D2VQ6SWEC"
+                   class="footer-link">
+                    Please donate me a coffee!
                 </a>
             </strong>
         </div>
     </div>
     <a style="cursor: default" id="vogel_a" class="footer-vogel">
-        <img loading="lazy" src="" alt="" id="vogel"/>
+        <img loading="lazy" src="@GetRandomImage()" alt="" id="vogel"/>
     </a>
 </footer>
 
+@code
+{
+
+    [CascadingParameter]
+    public MainLayout? MainLayout { get; set; }
+
+    public string GetRandomImage()
+    {
+        string path = "./img/";
+
+        string[] pictures = new[]
+        {
+            "vogel1.png",
+            "vogel2.png",
+            "vogel3.png",
+            "vogel5.png",
+            "vogel6.png",
+            "vogel7.png",
+            "vogel9.png",
+            "vogel10.png",
+            "vogel11.png",
+            "vogel12.png",
+            "vogel13.png",
+            "vogel14.png",
+            "vogel15.png",
+            "vogel16.png",
+            "vogel17.png",
+            "vogel18.png",
+            "vogel4.gif",
+            "vogel19.gif",
+            "vogel20.gif",
+            "vogel21.gif",
+            "vogel22.gif",
+            "vogel23.gif",
+            "vogel24.gif",
+            "vogel25.gif",
+        };
+
+        return path + pictures[new Random().Next(1, pictures.Length)];
+    }
+}
+
 <style>
+    .footer-link {
+      position: relative;
+      display: inline-block;
+      margin-bottom: .3rem;
+      color: @(MainLayout.IsDarkMode ? ThemeHandler.Theme.PaletteDark.White : ThemeHandler.Theme.Palette.Dark);
+      -webkit-transition: color 0.3s ease-out;
+      transition: color 0.3s ease-out;
+      cursor: pointer;
+    }
+    
+    .footer-link[youtube-font] {
+      font-family: "Youtube Sans", sans-serif;
+      letter-spacing: 0.03rem;
+      word-spacing: 0.05rem;
+    }
+    
+    .footer-link::before {
+      content: "";
+      position: absolute;
+      width: 100%;
+      -webkit-transform: scaleX(1);
+              transform: scaleX(1);
+      -webkit-transform-origin: bottom left;
+              transform-origin: bottom left;
+      height: 0.15rem;
+      border-radius: 10000px;
+      bottom: 0;
+      left: 0;
+      -webkit-transition: background 0.3s ease-out, -webkit-transform 0.3s ease-out;
+      transition: background 0.3s ease-out, -webkit-transform 0.3s ease-out;
+      transition: transform 0.3s ease-out, background 0.3s ease-out;
+      transition: transform 0.3s ease-out, background 0.3s ease-out, -webkit-transform 0.3s ease-out;
+      background-color: @(MainLayout.IsDarkMode ? ThemeHandler.Theme.PaletteDark.White : ThemeHandler.Theme.Palette.Dark);
+    }
+    
+    .footer-link:hover {
+      color: @(MainLayout.IsDarkMode ? ThemeHandler.Theme.PaletteDark.Secondary : ThemeHandler.Theme.Palette.SecondaryDarken);
+    }
+    
+    .footer-link:hover::before {
+      -webkit-transform: scaleX(0);
+              transform: scaleX(0);
+      -webkit-transform-origin: bottom right;
+              transform-origin: bottom right;
+      background-color: @(MainLayout.IsDarkMode ? ThemeHandler.Theme.PaletteDark.Secondary : ThemeHandler.Theme.Palette.SecondaryDarken);
+    }
+
     footer {
       position: relative;
       padding: 5rem 5rem 10rem 5rem;
-      background-color: hsl(220, 10%, 10%);
+      background-color: @(MainLayout.IsDarkMode ? ThemeHandler.Theme.PaletteDark.DarkDarken : ThemeHandler.Theme.Palette.GrayLighter);
+      color: @(MainLayout.IsDarkMode ? ThemeHandler.Theme.PaletteDark.White : ThemeHandler.Theme.Palette.Dark);
       font-size: 1rem;
-      color: hsl(0, 0%, 100%);
       min-height: 100vh;
       display: -webkit-box;
       display: -ms-flexbox;
@@ -109,9 +198,10 @@
       left: 50%;
       -webkit-transform: translateX(-50%);
               transform: translateX(-50%);
-      bottom: 1rem;
-      max-height: 3rem;
-      max-width: 3rem;
+      bottom: 3rem;
+      max-height: 4rem;
+      max-width: 4rem;
+      border-radius: 10000px;
     }
     footer .footer-vogel img {
       width: 100%;
@@ -122,13 +212,14 @@
       font-size: clamp(1.2rem, 1.64vw, 1.5rem);
       font-weight: 600;
       margin: 0.75rem 0;
+      color: @(MainLayout.IsDarkMode ? ThemeHandler.Theme.PaletteDark.White : ThemeHandler.Theme.Palette.Dark);
     }
     hr {
       position: relative;
       width: 100%;
       height: 0.25rem;
       margin: 1.5rem 0;
-      background-color: hsl(0, 0%, 60%);
+      background-color: @(MainLayout.IsDarkMode ? ThemeHandler.Theme.PaletteDark.White : ThemeHandler.Theme.Palette.GrayDarker);
       border-radius: 20px;
     }
     hr[length=fluid] {
