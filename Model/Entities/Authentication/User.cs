@@ -24,6 +24,10 @@ public class User {
     [Required]
     [NotMapped]
     public string LoginPassword { get; set; } = null!;
+
+    [Required]
+    [Column("ACTIVE")] 
+    public bool Active { get; set; } = true;
     
     public List<RoleClaim> RoleClaims { get; set; }
 
@@ -53,4 +57,11 @@ public class User {
             Email = this.Email
         };
     }
+
+    #region Properties for SettingsService
+
+    [Column("MESSAGE_FOR_ADMIN")]
+    public string? MessageForAdmin { get; set; }
+
+    #endregion
 }

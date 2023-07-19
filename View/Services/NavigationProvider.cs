@@ -62,6 +62,14 @@ public class NavigationProvider
                     Icon = Icons.Material.Filled.Source
                 }
             },
+            {
+                "New Users",
+                new Page()
+                {
+                    Name = "New Users", Link = "/newusers", Type = PageType.ADMIN_CONTENT,
+                    Icon = Icons.Material.Filled.Approval
+                }
+            },
 
             // Add pages here (everything else is automatic) #https://mudblazor.com/features/icons#icons
             {
@@ -330,9 +338,15 @@ public class NavigationProvider
 
     public List<Page> GetPages(params PageType[] types)
     {
-        if (types.Length > 0)
+        return GetPages(types.ToList());
+    }
+
+    public List<Page> GetPages(IEnumerable<PageType> types)
+    {
+        var pageTypes = types.ToList();
+        if (pageTypes.ToList().Count > 0)
             return _pages
-                .Where(p => types.Contains(p.Value.Type))
+                .Where(p => pageTypes.Contains(p.Value.Type))
                 .Select(p => p.Value)
                 .ToList();
 
@@ -468,6 +482,7 @@ public enum PageType
 {
     AUTHENTICATION,
     CONTENT,
+    ADMIN_CONTENT,
     FOOTER,
     RELATED,
     SERVICE,

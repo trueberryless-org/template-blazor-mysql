@@ -1,0 +1,25 @@
+﻿@page "/NewUsers"
+
+<PageTitle>New Users</PageTitle>
+
+<AuthorizeView>
+    <Authorized>
+        <MudContainer Class="mt-8">
+            <MudStack Spacing="4">
+                <h1 class="ms-4 mb-12">New Users</h1>
+            </MudStack>
+        </MudContainer>
+    </Authorized>
+</AuthorizeView>
+
+@code {
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender) return;
+
+        if (!await UserService.HasRole("Admin"))
+            NavigationManager.NavigateTo(NavigationProvider["Home"].Link);
+    }
+
+}

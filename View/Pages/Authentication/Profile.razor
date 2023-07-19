@@ -40,6 +40,27 @@
                         </p>
                     }
                 </MudPaper>
+
+                @if (UserService.CurrentUser is {PlainRoles: not null } && (bool)UserService.CurrentUser?.PlainRoles.Any())
+                {
+                    <MudPaper class="pa-4" Elevation="3">
+                        <div Style="@($"color:{(MainLayout.IsDarkMode ? ThemeHandler.Theme.PaletteDark.Warning : ThemeHandler.Theme.Palette.Secondary)};")">Roles:</div>
+
+                        @if (UserService.CurrentUser != null)
+                        {
+                            <p style="font-size: clamp(1rem, 20px, 2rem);">
+                                @string.Join(", ", UserService.CurrentUser?.PlainRoles)
+                            </p>
+                        }
+                        else
+                        {
+                            <p>
+                                Loading...
+                            </p>
+                        }
+                    </MudPaper>
+                }
+
                 <MudButton StartIcon="@Icons.Material.Filled.Logout" Disabled="@_processing" OnClick="LogoutAsync" Variant="Variant.Filled" Color="Color.Primary">
                     @if (_processing)
                     {
@@ -61,13 +82,14 @@
     [CascadingParameter]
     public MainLayout? MainLayout { get; set; }
 
-    
+
     private bool _processing = false;
-    
+
     public async Task LogoutAsync()
     {
         _processing = true;
         await UserService.LogoutAsync();
         NavigationManager.NavigateTo(NavigationProvider["Login"].Link);
     }
+
 }

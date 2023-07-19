@@ -4,6 +4,8 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace Model.Migrations
 {
     /// <inheritdoc />
@@ -43,6 +45,9 @@ namespace Model.Migrations
                     EMAIL = table.Column<string>(type: "varchar(255)", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     PASSWORDHASH = table.Column<string>(name: "PASSWORD_HASH", type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    ACTIVE = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    MESSAGEFORADMIN = table.Column<string>(name: "MESSAGE_FOR_ADMIN", type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4")
                 },
                 constraints: table =>
@@ -106,7 +111,12 @@ namespace Model.Migrations
             migrationBuilder.InsertData(
                 table: "ROLES",
                 columns: new[] { "ROLE_ID", "DESCRIPTION", "IDENTIFIER" },
-                values: new object[] { 1, "Administrator", "Admin" });
+                values: new object[,]
+                {
+                    { 1, "Administrator", "Admin" },
+                    { 2, "Registered User", "User" },
+                    { 3, "Unregistered User", "Guest" }
+                });
 
             migrationBuilder.CreateIndex(
                 name: "IX_LOG_ENTRIES_USER_ID",

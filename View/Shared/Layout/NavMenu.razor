@@ -24,6 +24,22 @@
                 </div>
             </MudNavLink>
         }
+        
+        @if (_isAdmin)
+        {
+            <MudListSubheader class="subheadings">
+                ADMIN
+            </MudListSubheader>
+            @foreach (var pageElement in NavigationProvider.GetPages(PageType.ADMIN_CONTENT))
+            {
+                @if (pageElement.Link == "/") continue;
+                <MudNavLink Href="@(pageElement.Link)" Icon="@(pageElement.Icon)" Match="NavLinkMatch.All" Class="icon-hover">
+                    <div class="d-flex">
+                        <MudText Inline="true" Style="white-space: nowrap;">@pageElement.Name</MudText>
+                    </div>
+                </MudNavLink>
+            }
+        }
     </MudNavMenu>
     <MudSpacer/>
 
@@ -34,8 +50,8 @@
             </div>
         </MudNavLink>
     </MudNavMenu>
-    
-    
+
+
     <MudNavMenu Style="margin-bottom: 1rem">
         @foreach (var pageElement in NavigationProvider.GetPages(PageType.USER))
         {
@@ -61,6 +77,8 @@
     string ToggleIcon = Icons.Material.Filled.ArrowDropDownCircle;
     string ToggleText = "Responsive";
 
+    bool _isAdmin;
+
     public async Task LogoutAsync()
     {
         await UserService.LogoutAsync();
@@ -69,7 +87,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        
+        _isAdmin = await UserService.HasRole("Admin");
     }
 
     public async Task ToggleSideMenu()

@@ -48,6 +48,18 @@ namespace Model.Migrations
                             Id = 1,
                             Description = "Administrator",
                             Identifier = "Admin"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Description = "Registered User",
+                            Identifier = "User"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Description = "Unregistered User",
+                            Identifier = "Guest"
                         });
                 });
 
@@ -75,10 +87,18 @@ namespace Model.Migrations
                         .HasColumnType("int")
                         .HasColumnName("USER_ID");
 
+                    b.Property<bool>("Active")
+                        .HasColumnType("tinyint(1)")
+                        .HasColumnName("ACTIVE");
+
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("varchar(255)")
                         .HasColumnName("EMAIL");
+
+                    b.Property<string>("MessageForAdmin")
+                        .HasColumnType("longtext")
+                        .HasColumnName("MESSAGE_FOR_ADMIN");
 
                     b.Property<string>("PasswordHash")
                         .IsRequired()

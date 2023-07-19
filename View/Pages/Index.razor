@@ -1,15 +1,32 @@
 ﻿@page "/"
 
+@if (!SettingsProvider.DeveloperKnowsAboutSettingsProvider)
+{
+    <MudContainer Class="mt-8 my-login-container">
+        <MudStack Spacing="4">
+            <h1>Hello, dear friend!</h1>
+            <p>
+                If you're the developer, please go to @nameof(View) / @nameof(Services) / @nameof(SettingsProvider).
+                <br/>
+                We promise, you'll like it there.
+            </p>
+        </MudStack>
+    </MudContainer>
+}
+
 @code {
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (!firstRender) return;
-        
-        if (await UserService.IsAuthenticated())
-            NavigationManager.NavigateTo(NavigationProvider["Home"].Link);
-        else
-            NavigationManager.NavigateTo(NavigationProvider["Login"].Link);
+
+        if (SettingsProvider.DeveloperKnowsAboutSettingsProvider)
+        {
+            if (await UserService.IsAuthenticated())
+                NavigationManager.NavigateTo(NavigationProvider["Home"].Link);
+            else
+                NavigationManager.NavigateTo(NavigationProvider["Login"].Link);
+        }
     }
 
 }
