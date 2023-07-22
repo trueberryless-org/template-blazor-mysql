@@ -14,6 +14,12 @@ public static class SettingsProvider
     /// </summary>
     public const bool DeveloperKnowsAboutSettingsProvider = true;
 
+    #region Application Settings
+
+    public const string ApplicationName = "MyFirstTemplate";
+
+    #endregion
+
     #region Your Email Settings
 
     public const string EmailHost = "smtp.gmail.com";
@@ -23,6 +29,15 @@ public static class SettingsProvider
     public const string EmailUsername = "";
     public const string EmailFrom = "";
     public const string EmailPassword = "";
+
+    public const string EmailApplicationUrl = "";
+    public const string EmailApplicationLogo = "";
+    public const string EmailApplicationName = "";
+    
+    public const string EmailHeaderText = "";
+    public const string EmailCompanyAddress = "";
+    public const string EmailApplicationLogInPage = "";
+    
 
     #endregion
 
