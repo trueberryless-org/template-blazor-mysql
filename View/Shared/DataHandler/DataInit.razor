@@ -3,6 +3,10 @@
 @if (Data is not null) {
     @ChildContent(Data)
 }
+else
+{
+    <MudProgressCircular Color="Color.Primary" Indeterminate="true"/>
+}
 
 @code {
     

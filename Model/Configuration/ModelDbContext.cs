@@ -1,5 +1,6 @@
 ﻿using Model.Entities;
 using Model.Entities.Authentication;
+using Model.Entities.Email;
 using Model.Entities.Log;
 
 namespace Model.Configuration;
@@ -50,6 +51,10 @@ public class ModelDbContext : DbContext
         // ENUMS
         modelBuilder.Entity<LogEntry>()
             .Property(le => le.FieldType)
+            .HasConversion<string>();
+        
+        modelBuilder.Entity<EmailTemplate>()
+            .Property(et => et.TemplateType)
             .HasConversion<string>();
         
         // SEEDING

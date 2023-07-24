@@ -46,7 +46,7 @@
                 <MudListSubheader class="subheadings">
                     ADMIN
                 </MudListSubheader>
-                @foreach (var pageElement in NavigationProvider.GetPages(PageType.ADMIN_CONTENT))
+                @foreach (var pageElement in NavigationProvider.GetPages(PageType.ADMIN_SETTINGS))
                 {
                     <MudListItem Icon="@pageElement.Icon" OnClick="() => GoTo(pageElement.Link, true)" IconColor="@pageElement.Color" class="item">
                         @pageElement.Name
@@ -66,15 +66,28 @@
             <MudListSubheader class="subheadings">
                 ACCOUNT
             </MudListSubheader>
-            @foreach (var pageElement in NavigationProvider.GetPages(PageType.USER))
+            @if (_isLoggedin)
             {
-                <MudListItem Icon="@pageElement.Icon" OnClick="() => GoTo(pageElement.Link, true)" IconColor="@pageElement.Color" class="item">
-                    @pageElement.Name
+                @foreach (var pageElement in NavigationProvider.GetPages(PageType.USER))
+                {
+                    <MudListItem Icon="@pageElement.Icon" OnClick="() => GoTo(pageElement.Link, true)" IconColor="@pageElement.Color" class="item">
+                        @pageElement.Name
+                    </MudListItem>
+                }
+                <MudListItem OnClick="LogoutAsync" Icon="@Icons.Material.Filled.Logout" class="item">
+                    Log Out
                 </MudListItem>
             }
-            <MudListItem Icon="@Icons.Material.Filled.Logout" OnClick="LogoutAsync" class="item">
-                Log out
-            </MudListItem>
+            else
+            {
+                <MudListItem Href="@NavigationProvider["Login"].Link" Icon="@Icons.Material.Filled.Login" class="item">
+                    Log In
+                </MudListItem>
+                <MudListItem Href="@NavigationProvider["Register"].Link" Icon="@Icons.Material.Filled.Create" class="item">
+                    Sign Up
+                </MudListItem>
+            }
+
         </MudList>
     </div>
     @*</MudSwipeArea>*@
@@ -91,11 +104,14 @@
     private object?[]? _mudList;
     double scrollTop;
 
+    bool _isLoggedin;
     bool _isAdmin;
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
+        _isLoggedin = await UserService.IsAuthenticated();
         _isAdmin = await UserService.HasRole("Admin");
+        StateHasChanged();
     }
 
     public void ToggleOpen()

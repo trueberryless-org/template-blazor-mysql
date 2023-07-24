@@ -12,7 +12,7 @@
         <MudIconButton Color="Color.Primary"
                        Icon="@Icons.Filled.Home"
                        Size="Size.Large"
-                       Href="/"/>
+                       Href="@NavigationProvider["Home"].Link"/>
     </MudDrawerHeader>
     <MudNavMenu Style="overflow-y: scroll">
         @foreach (var pageElement in NavigationProvider.GetPages(PageType.CONTENT))
@@ -24,15 +24,14 @@
                 </div>
             </MudNavLink>
         }
-        
+
         @if (_isAdmin)
         {
-            <MudListSubheader class="subheadings">
+            <MudText class="subheadings">
                 ADMIN
-            </MudListSubheader>
-            @foreach (var pageElement in NavigationProvider.GetPages(PageType.ADMIN_CONTENT))
+            </MudText>
+            @foreach (var pageElement in NavigationProvider.GetPages(PageType.ADMIN_SETTINGS))
             {
-                @if (pageElement.Link == "/") continue;
                 <MudNavLink Href="@(pageElement.Link)" Icon="@(pageElement.Icon)" Match="NavLinkMatch.All" Class="icon-hover">
                     <div class="d-flex">
                         <MudText Inline="true" Style="white-space: nowrap;">@pageElement.Name</MudText>
@@ -51,21 +50,41 @@
         </MudNavLink>
     </MudNavMenu>
 
-
     <MudNavMenu Style="margin-bottom: 1rem">
-        @foreach (var pageElement in NavigationProvider.GetPages(PageType.USER))
-        {
-            <MudNavLink Href="@(pageElement.Link)" Icon="@(pageElement.Icon)" Match="NavLinkMatch.All" Class="icon-hover">
-                <div class="d-flex">
-                    <MudText Inline="true" Style="white-space: nowrap;">@pageElement.Name</MudText>
-                </div>
-            </MudNavLink>
-        }
-        <MudNavLink OnClick="LogoutAsync" Icon="@Icons.Material.Filled.Logout" Match="NavLinkMatch.All" Class="icon-hover">
-            <div class="d-flex">
-                <MudText Inline="true" Style="white-space: nowrap;">Log Out</MudText>
-            </div>
-        </MudNavLink>
+        <DataInit Data="_isLoggedin">
+            <ChildContent Context="loggedin">
+                @if (loggedin)
+                {
+                    @foreach (var pageElement in NavigationProvider.GetPages(PageType.USER))
+                    {
+                        <MudNavLink Href="@(pageElement.Link)" Icon="@(pageElement.Icon)" Match="NavLinkMatch.All" Class="icon-hover">
+                            <div class="d-flex">
+                                <MudText Inline="true" Style="white-space: nowrap;">@pageElement.Name</MudText>
+                            </div>
+                        </MudNavLink>
+                    }
+
+                    <MudNavLink OnClick="LogoutAsync" Icon="@Icons.Material.Filled.Logout" Match="NavLinkMatch.All" Class="icon-hover">
+                        <div class="d-flex">
+                            <MudText Inline="true" Style="white-space: nowrap;">Log Out</MudText>
+                        </div>
+                    </MudNavLink>
+                }
+                else
+                {
+                    <MudNavLink Href="@NavigationProvider["Login"].Link" Icon="@NavigationProvider["Login"].Icon" Match="NavLinkMatch.All" Class="icon-hover">
+                        <div class="d-flex">
+                            <MudText Inline="true" Style="white-space: nowrap;">Log In</MudText>
+                        </div>
+                    </MudNavLink>
+                    <MudNavLink Href="@NavigationProvider["Register"].Link" Icon="@NavigationProvider["Register"].Icon" Match="NavLinkMatch.All" Class="icon-hover">
+                        <div class="d-flex">
+                            <MudText Inline="true" Style="white-space: nowrap;">Sign Up</MudText>
+                        </div>
+                    </MudNavLink>
+                }
+            </ChildContent>
+        </DataInit>
     </MudNavMenu>
 </MudDrawer>
 
@@ -77,6 +96,7 @@
     string ToggleIcon = Icons.Material.Filled.ArrowDropDownCircle;
     string ToggleText = "Responsive";
 
+    bool _isLoggedin;
     bool _isAdmin;
 
     public async Task LogoutAsync()
@@ -85,9 +105,10 @@
         NavigationManager.NavigateTo(NavigationProvider["Login"].Link);
     }
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        _isAdmin = await UserService.HasRole("Admin");
+        _isLoggedin = await UserService.IsAuthenticated();
+        _isAdmin = _isLoggedin && await UserService.HasRole("Admin");
     }
 
     public async Task ToggleSideMenu()
@@ -120,10 +141,6 @@
         background: none;
     }
     
-    .toggle-button {
-        border-radius: 1000px !important;
-    }
-    
     .icon-hover:hover .mud-icon-root {
         fill: @(MainLayout.IsDarkMode ? ThemeHandler.Theme.PaletteDark.Secondary : ThemeHandler.Theme.Palette.SecondaryDarken);
     }
@@ -145,5 +162,10 @@
     
     .side-menu {
         border-right: 1px solid rgba(@(MainLayout.IsDarkMode ? ThemeHandler.Theme.PaletteDark.Secondary : ThemeHandler.Theme.Palette.SecondaryDarken), 0.4);
+    }
+    
+    .subheadings {
+        text-align: right;
+        color: @(MainLayout.IsDarkMode ? ThemeHandler.Theme.PaletteDark.Warning : ThemeHandler.Theme.Palette.Secondary);
     }
 </style>

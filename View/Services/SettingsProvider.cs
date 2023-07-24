@@ -16,13 +16,26 @@ public static class SettingsProvider
 
     #region Application Settings
 
+    /// <summary>
+    /// The name of the application or company is used many times.
+    /// For example in email templates, on view pages and so on.
+    /// </summary>
     public const string ApplicationName = "MyFirstTemplate";
 
     #endregion
 
     #region Your Email Settings
 
-    public const string EmailHost = "smtp.gmail.com";
+    /// <summary>
+    /// In order for emails to work, we need these basic information:
+    ///     Host: The url which hosts your email service ("smtp.gmail.com", "smtp.office365.com", ...)
+    ///     Port: The port where emails should be sent from (465 for SSL/TLS, 587)
+    ///     SSL: Is used to encrypt your emails (in most cases activated on ports 465 or 587
+    ///     Username: If you dont know any username, it is very likely your email address
+    ///     From: From which email address should all emails be sent from?
+    ///     Password: // TODO make secure
+    /// </summary>
+    public const string EmailHost = "";
     public const int EmailPort = 587;
     public const bool EmailEnableSsl = true;
     
@@ -30,13 +43,18 @@ public static class SettingsProvider
     public const string EmailFrom = "";
     public const string EmailPassword = "";
 
-    public const string EmailApplicationUrl = "";
-    public const string EmailApplicationLogo = "";
-    public const string EmailApplicationName = "";
+    /// <summary>
+    /// In some emails we need these information:
+    ///     AppName: What is the name of your company?
+    ///     AppUrl: The user should be able to quickly open your app [base url]
+    ///     AppLogo: Path [Url or relative Path] to your logo img
+    /// </summary>
+    public const string EmailApplicationName = "YouTube";
+    public const string EmailApplicationUrl = "https://www.youtube.com";
+    public const string EmailApplicationLogo = "https://static.vecteezy.com/system/resources/previews/018/930/572/original/youtube-logo-youtube-icon-transparent-free-png.png";
     
-    public const string EmailHeaderText = "";
-    public const string EmailCompanyAddress = "";
-    public const string EmailApplicationLogInPage = "";
+    public const string EmailCompanySlogan = "Watch what you want!";
+    public const string EmailCompanyAddress = "youtube@gmail.com";
     
 
     #endregion
@@ -53,7 +71,7 @@ public static class SettingsProvider
     /// true:   If a new user registers, the need to be confirmed by an admin.
     /// false:  [default] As soon as a user registers, a new account is created.
     /// </summary>
-    public const bool NewUsersNeedToBeConfirmedByAdmins = false;
+    public const bool NewUsersNeedToBeConfirmedByAdmins = true;
 
     #endregion
 }

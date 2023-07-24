@@ -6,38 +6,40 @@
 <MudContainer Class="mt-8">
     <MudStack Spacing="4">
         <h1 class="ms-4 mb-12">Log In</h1>
-        
+
         <div @onkeydown="@TryLogin">
             <MudForm @ref="_from">
-                @if (_error is not null)
-                {
-                    <MudAlert Severity="Severity.Error" ShowCloseIcon="true" CloseIconClicked="() => _error = null">
-                        @(_error)
-                    </MudAlert>
-                }
-                
-                <MudTextField
-                    T="string" Immediate="true" InputType="InputType.Text" InputMode="InputMode.text"
-                    Variant="Variant.Outlined"
-                    Label="Email"
-                    @bind-Value="Model.Email"
-                    For="() => Model.Email"/>
-                
-                <MudTextField
-                    T="string" Immediate="true" InputMode="InputMode.text"
-                    Variant="Variant.Outlined"
-                    Label="Password" Class="mt-3"
-                    InputType="_passwordInputType" Adornment="Adornment.End"
-                    AdornmentIcon="@_passwordInputIcon" OnAdornmentClick="ShowPwd"
-                    @bind-Value="Model.Password"
-                    For="() => Model.Password"/>
+                <MudStack Spacing="4">
+                    @if (_error is not null)
+                    {
+                        <MudAlert Severity="Severity.Error" ShowCloseIcon="true" CloseIconClicked="() => _error = null">
+                            @(_error)
+                        </MudAlert>
+                    }
+
+                    <MudTextField
+                        T="string" Immediate="true" InputType="InputType.Text" InputMode="InputMode.text"
+                        Variant="Variant.Outlined"
+                        Label="Email"
+                        @bind-Value="Model.Email"
+                        For="() => Model.Email"/>
+
+                    <MudTextField
+                        T="string" Immediate="true" InputMode="InputMode.text"
+                        Variant="Variant.Outlined"
+                        Label="Password" Class="mt-3"
+                        InputType="_passwordInputType" Adornment="Adornment.End"
+                        AdornmentIcon="@_passwordInputIcon" OnAdornmentClick="ShowPwd"
+                        @bind-Value="Model.Password"
+                        For="() => Model.Password"/>
+                </MudStack>
             </MudForm>
         </div>
-        
+
         <MudOverlay @bind-Visible="_isLoggingIn" DarkBackground="true" AutoClose="false" LockScroll="true" Absolute="true" Style="position: fixed; top: 0; bottom: 0; left: 0; right: 0;">
             <MudProgressCircular Color="Color.Primary" Indeterminate="true" Size="Size.Large"/>
         </MudOverlay>
-        
+
         <MudCardActions>
             <MudButton ButtonType="ButtonType.Button" Variant="Variant.Filled" Color="Color.Primary" OnClick="async () => await HandleLoginAsync()">Login</MudButton>
             <MudSpacer/>
@@ -59,7 +61,7 @@
     bool _isShow;
     string _passwordInputIcon = Icons.Material.Filled.VisibilityOff;
     InputType _passwordInputType = InputType.Password;
-    
+
     LoginModel Model { get; } = new();
 
     void ShowPwd()
@@ -91,12 +93,18 @@
             if (!await _from.IsFormValidAsync()) return;
             _isLoggingIn = true;
             await UserService.LoginAsync(Model);
+            StateHasChanged();
             NavigationManager.NavigateTo(NavigationProvider["Root"].Link);
         }
         catch (LoginException)
         {
             _error = "Invalid email or password";
             Snackbar.Add($"Invalid email of password!", Severity.Error);
+        }
+        catch (UserNotActiveException)
+        {
+            _error = "User account not activated";
+            Snackbar.Add($"Since your account is not activated, you cannot log in.<br/>Please wait until an admin approves your account!", Severity.Info);
         }
         catch (TaskCanceledException)
         {
@@ -115,6 +123,13 @@
         {
             _isLoggingIn = false;
         }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender) return;
+        if (await UserService.IsAuthenticated())
+            NavigationManager.NavigateTo(NavigationProvider["Root"].Link);
     }
 
 }

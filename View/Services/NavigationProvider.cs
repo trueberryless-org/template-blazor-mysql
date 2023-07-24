@@ -63,11 +63,11 @@ public class NavigationProvider
                 }
             },
             {
-                "New Users",
+                "Inactive Users",
                 new Page()
                 {
-                    Name = "New Users", Link = "/newusers", Type = PageType.ADMIN_CONTENT,
-                    Icon = Icons.Material.Filled.Approval
+                    Name = "Inactive Users", Link = "/admin/inactiveusers", Type = PageType.ADMIN_SETTINGS,
+                    Icon = Icons.Material.Filled.GroupOff
                 }
             },
 
@@ -143,106 +143,6 @@ public class NavigationProvider
                     Link = "/Mail",
                     Type = PageType.CONTENT,
                     Icon = Icons.Material.Filled.Mail
-                }
-            },
-            {
-                "Backspace",
-                new Page()
-                {
-                    Name = "Backspace",
-                    Link = "/Backspace",
-                    Type = PageType.CONTENT,
-                    Icon = Icons.Material.Filled.Backspace
-                }
-            },
-            {
-                "Edit",
-                new Page()
-                {
-                    Name = "Edit",
-                    Link = "/Edit",
-                    Type = PageType.CONTENT,
-                    Icon = Icons.Material.Filled.Edit
-                }
-            },
-            {
-                "Factory",
-                new Page()
-                {
-                    Name = "Factory",
-                    Link = "/Factory",
-                    Type = PageType.CONTENT,
-                    Icon = Icons.Material.Filled.Factory
-                }
-            },
-            {
-                "Mediation",
-                new Page()
-                {
-                    Name = "Mediation",
-                    Link = "/Mediation",
-                    Type = PageType.CONTENT,
-                    Icon = Icons.Material.Filled.Mediation
-                }
-            },
-            {
-                "Nature",
-                new Page()
-                {
-                    Name = "Nature",
-                    Link = "/Nature",
-                    Type = PageType.CONTENT,
-                    Icon = Icons.Material.Filled.Nature
-                }
-            },
-            {
-                "Landscape",
-                new Page()
-                {
-                    Name = "Landscape",
-                    Link = "/Landscape",
-                    Type = PageType.CONTENT,
-                    Icon = Icons.Material.Filled.Landscape
-                }
-            },
-            {
-                "Tab",
-                new Page()
-                {
-                    Name = "Tab",
-                    Link = "/Tab",
-                    Type = PageType.CONTENT,
-                    Icon = Icons.Material.Filled.Tab
-                }
-            },
-            {
-                "Panorama",
-                new Page()
-                {
-                    Name = "Panorama",
-                    Link = "/Panorama",
-                    Type = PageType.CONTENT,
-                    Icon = Icons.Material.Filled.Panorama
-                }
-            },
-            {
-                "Elevator",
-                new Page()
-                {
-                    Name = "Elevator",
-                    Link = "/Elevator",
-                    Type = PageType.CONTENT,
-                    Icon = Icons.Material.Filled.Elevator
-                }
-            },
-            {
-                "Water",
-                new Page()
-                {
-                    Name = "Water",
-                    Link = "/Water",
-                    Type = PageType.CONTENT,
-                    Icon = Icons.Material.Filled.Water
                 }
             },
         };
@@ -482,7 +382,7 @@ public enum PageType
 {
     AUTHENTICATION,
     CONTENT,
-    ADMIN_CONTENT,
+    ADMIN_SETTINGS,
     FOOTER,
     RELATED,
     SERVICE,

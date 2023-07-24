@@ -118,6 +118,33 @@ namespace Model.Migrations
                     b.ToTable("USERS");
                 });
 
+            modelBuilder.Entity("Model.Entities.Email.EmailTemplate", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("ID");
+
+                    b.Property<string>("PathToBody")
+                        .IsRequired()
+                        .HasColumnType("longtext")
+                        .HasColumnName("PATH_TO_BODY");
+
+                    b.Property<string>("Subject")
+                        .IsRequired()
+                        .HasColumnType("longtext")
+                        .HasColumnName("SUBJECT");
+
+                    b.Property<string>("TemplateType")
+                        .IsRequired()
+                        .HasColumnType("longtext")
+                        .HasColumnName("TEMPLATE_TYPE");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("EMAIL_TEMPLATES");
+                });
+
             modelBuilder.Entity("Model.Entities.Log.LogEntry", b =>
                 {
                     b.Property<int>("Id")

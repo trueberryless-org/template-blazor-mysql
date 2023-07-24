@@ -34,10 +34,10 @@ builder.Services.AddMudServices(config =>
 {
     config.SnackbarConfiguration.PositionClass = Defaults.Classes.Position.BottomCenter;
 
-    config.SnackbarConfiguration.PreventDuplicates = false;
+    config.SnackbarConfiguration.PreventDuplicates = true;
     config.SnackbarConfiguration.NewestOnTop = false;
     config.SnackbarConfiguration.ShowCloseIcon = true;
-    config.SnackbarConfiguration.VisibleStateDuration = 3000;
+    config.SnackbarConfiguration.VisibleStateDuration = 5000;
     config.SnackbarConfiguration.HideTransitionDuration = 200;
     config.SnackbarConfiguration.ShowTransitionDuration = 200;
     config.SnackbarConfiguration.SnackbarVariant = Variant.Filled;
@@ -53,7 +53,10 @@ builder.Services.AddScoped<IThemeHandler, ThemeHandler>();
 builder.Services.AddScoped<CircuitHandler, CircuitTracker>();
 
 builder.Services.AddScoped<EventProvider>();
+
 builder.Services.AddScoped<EmailService>();
+builder.Services.AddScoped<IEmailTemplateRepository, EmailTemplateRepository>();
+
 builder.Services.AddScoped<NavigationProvider>();
 builder.Services.AddScoped<DateManager>();
 builder.Services.AddScoped<BrowserService>();

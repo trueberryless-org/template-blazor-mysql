@@ -1,15 +1,16 @@
 ﻿@page "/register"
 @using Model.Entities.Authentication.Models
+@using Model.Entities.Email
 
 <PageTitle>Register</PageTitle>
 
-<MudContainer Class="mt-8 my-login-container">
+<MudContainer Class="mt-8">
     <MudStack Spacing="4">
         <h1 class="ms-4 mb-12">Sign Up</h1>
 
         @if (!SettingsProvider.UserCanRegister)
         {
-            <MudAlert Severity="Severity.Error" ShowCloseIcon="true" CloseIconClicked="() => _error = null">
+            <MudAlert Severity="Severity.Error">
                 We are sorry, but registrations are currently disabled!
             </MudAlert>
         }
@@ -18,7 +19,7 @@
         {
             @if (SettingsProvider.NewUsersNeedToBeConfirmedByAdmins)
             {
-                <MudAlert Severity="Severity.Info" ShowCloseIcon="true" CloseIconClicked="() => _error = null">
+                <MudAlert Severity="Severity.Info">
                     Each new user must be approved by an administrator. 
                     This means you'll have to wait to log in until you receive a confirmation email.
                 </MudAlert>
@@ -135,12 +136,11 @@
             if (!await _form.IsFormValidAsync()) return;
             _isRegistering = true;
             
-            
-
             if (SettingsProvider.NewUsersNeedToBeConfirmedByAdmins)
             {
                 RegUser.Active = false;
                 await UserService.RegisterAsync(RegUser);
+                await EmailService.SendEmail(TemplateType.ADMIN_USER_APPROVAL, await RoleRepository.GetAllUsersWithRole("Admin"));
             }
             else
             {
@@ -171,6 +171,12 @@
         {
             Logger.LogInformation("Login canceled");
         }
+        catch (EmailSendingException)
+        {
+            await UserRepository.DeleteAsync(RegUser);
+            Logger.LogError("Email couldn't be sent!");
+            Snackbar.Add($"An email couldn't be sent. Please try again later when a developer fixed the issue...", Severity.Error);
+        }
         catch (Exception e)
         {
             Logger.LogCritical("Login failed: {Message} \n", e.Message);
@@ -180,6 +186,13 @@
         {
             _isRegistering = false;
         }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender) return;
+        if (await UserService.IsAuthenticated())
+            NavigationManager.NavigateTo(NavigationProvider["Root"].Link);
     }
 
 }

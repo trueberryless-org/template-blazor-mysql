@@ -45,6 +45,9 @@ public class UserService {
         if (user is null)
             throw new LoginException();
 
+        if (!user.Active)
+            throw new UserNotActiveException();
+
         await _authenticationStateProvider.Login(user);
     }
 
