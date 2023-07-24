@@ -1,0 +1,130 @@
+﻿@page "/admin/inactiveusers"
+@using Model.Entities.Email
+
+@inject IUserRepository UserRepository
+
+<PageTitle>Admin - Inactive Users</PageTitle>
+
+<AuthorizeView>
+    <Authorized>
+        <MudContainer Class="mt-8">
+            <MudStack Spacing="4">
+                <MudTable ServerData="@(new Func<TableState, Task<TableData<User>>>(ServerReload))"
+                          Hover="true" @ref="table">
+                    <ToolBarContent>
+                        <MudText Typo="Typo.h6">Users who want to register</MudText>
+                        <MudSpacer/>
+                        <MudTextField T="string" ValueChanged="@(s => OnSearch(s))" Placeholder="Search" Adornment="Adornment.Start"
+                                      AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0">
+                        </MudTextField>
+                    </ToolBarContent>
+                    <HeaderContent>
+                        <MudTh>
+                            <MudTableSortLabel SortLabel="username_field" T="User">Username</MudTableSortLabel>
+                        </MudTh>
+                        <MudTh>
+                            <MudTableSortLabel SortLabel="email_field" T="User">Email</MudTableSortLabel>
+                        </MudTh>
+                        <MudTh>Message for Admin</MudTh>
+                        <MudTh>Decision</MudTh>
+                    </HeaderContent>
+                    <RowTemplate Context="user">
+                        <MudTd DataLabel="Username">@user.Username</MudTd>
+                        <MudTd DataLabel="Email">@user.Email</MudTd>
+                        <MudTd DataLabel="Email">@user.MessageForAdmin</MudTd>
+                        <MudTd DataLabel="Action">
+                            <MudButtonGroup Variant="Variant.Text">
+                                <MudIconButton Color="Color.Success" OnClick="async () => await Accept(user.Id)" Icon="@Icons.Material.Rounded.Check"></MudIconButton>
+                                <MudIconButton Color="Color.Error" OnClick="async () => await Decline(user.Id)" Icon="@Icons.Material.Rounded.Close"></MudIconButton>
+                            </MudButtonGroup>
+                        </MudTd>
+                    </RowTemplate>
+                    <NoRecordsContent>
+                        <MudText>No matching records found</MudText>
+                    </NoRecordsContent>
+                    <LoadingContent>
+                        <MudText>Loading...</MudText>
+                    </LoadingContent>
+                    <PagerContent>
+                        <MudTablePager/>
+                    </PagerContent>
+                </MudTable>
+            </MudStack>
+        </MudContainer>
+    </Authorized>
+</AuthorizeView>
+
+@code {
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender) return;
+
+        if (!await UserService.HasRole("Admin"))
+            NavigationManager.NavigateTo(NavigationProvider["Home"].Link);
+    }
+
+    private IEnumerable<User> pagedData;
+    private MudTable<User> table;
+
+    private int totalItems;
+    private string searchString = null;
+
+    /// <summary>
+    /// Here we simulate getting the paged, filtered and ordered data from the server
+    /// </summary>
+    private async Task<TableData<User>> ServerReload(TableState state)
+    {
+        IEnumerable<User> data = await UserRepository.ReadAsync(e => !e.Active);
+        await Task.Delay(300);
+        data = data.Where(user =>
+        {
+            if (string.IsNullOrWhiteSpace(searchString))
+                return true;
+            if (user.Username.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+                return true;
+            if (user.Email.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+                return true;
+            return false;
+        }).ToArray();
+        totalItems = data.Count();
+        switch (state.SortLabel)
+        {
+            case "username_field":
+                data = data.OrderByDirection(state.SortDirection, o => o.Username);
+                break;
+            case "email_field":
+                data = data.OrderByDirection(state.SortDirection, o => o.Email);
+                break;
+        }
+
+        pagedData = data.Skip(state.Page * state.PageSize).Take(state.PageSize).ToArray();
+        return new TableData<User>() { TotalItems = totalItems, Items = pagedData };
+    }
+
+    private void OnSearch(string text)
+    {
+        searchString = text;
+        table.ReloadServerData();
+    }
+
+    async Task Accept(int userId)
+    {
+        var user = await UserRepository.ReadAsync(userId);
+        if (user == null) return;
+        user.Active = true;
+        await UserRepository.UpdateAsync(user);
+        await table.ReloadServerData();
+        await EmailService.SendEmail(TemplateType.USER_REGISTRATION_COMPLETE, user.Email);
+    }
+
+    async Task Decline(int userId)
+    {
+        var user = await UserRepository.ReadAsync(userId);
+        if (user == null) return;
+        await EmailService.SendEmail(TemplateType.USER_REGISTRATION_DECLINED, user.Email);
+        await UserRepository.DeleteAsync(user);
+        await table.ReloadServerData();
+    }
+
+}
