@@ -14,7 +14,14 @@
                        Size="Size.Large"
                        Href="@NavigationProvider["Home"].Link"/>
     </MudDrawerHeader>
-    <MudNavMenu Style="overflow-y: scroll">
+    <MudNavMenu Style="overflow-y: scroll; padding: 0;">
+        @if (_isAdmin)
+        {
+            <MudText class="subheadings">
+                USER
+            </MudText>
+        }
+        
         @foreach (var pageElement in NavigationProvider.GetPages(PageType.CONTENT))
         {
             @if (pageElement.Link == "/") continue;
@@ -165,7 +172,25 @@
     }
     
     .subheadings {
-        text-align: right;
         color: @(MainLayout.IsDarkMode ? ThemeHandler.Theme.PaletteDark.Warning : ThemeHandler.Theme.Palette.Secondary);
+        opacity: 0;
+        height: 16px;
+        margin-inline: 38px;
+        transition: opacity .2s ease-in-out, height .3s ease-in-out .1s;
+        user-select: none;
+        
+        display: flex;
+        align-items: end;
     }
 </style>
+
+@if (ThemeHandler.SideOpen)
+{
+    <style>
+        .subheadings {
+            opacity: 1;
+            height: 32px;
+            transition: opacity .3s ease-in-out .1s, height .3s ease-in-out;
+        }
+    </style>
+}
